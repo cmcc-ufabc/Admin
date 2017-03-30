@@ -9,7 +9,6 @@ import model.Disciplina;
 import model.Docente;
 import util.DocenteDataModel;
 
-
 public class Filtros {
 
     public Filtros() {
@@ -28,6 +27,7 @@ public class Filtros {
     //Todos os eixos
     private List<String> filtrosEixos;
     
+    //Pega todos os eixos
     public List<String> getFiltrosEixos() {
         
         filtrosEixos = new ArrayList<>();
@@ -49,8 +49,7 @@ public class Filtros {
     public void setFiltrosEixos(List<String> filtrosEixos) {
         this.filtrosEixos = filtrosEixos;
     }
-    
-    
+
     //Eixos escolhidos para filtrar
     private List<String> filtrosSelecEixos;
     
@@ -65,14 +64,20 @@ public class Filtros {
     //Todos os cursos
     private List<String> filtrosCursos;
     
+    //Pega todos os cursos
     public List<String> getFiltrosCursos() {
         filtrosCursos = new ArrayList<>();
         filtrosCursos.add("Bacharelado em Ciencia da Computacao");
+        filtrosCursos.add("Bacharelado em Ciencia e Tecnologia");
+        filtrosCursos.add("Bacharelado em Ciencia e Humanidades");
         filtrosCursos.add("Bacharelado em Economia");
+        filtrosCursos.add("Bacharelado em Matematica");
+        filtrosCursos.add("Bacharelado em Neurociencia");
         filtrosCursos.add("Bacharelado em Planejamento Territorial");
         filtrosCursos.add("Bacharelado em Politicas Publicas");
         filtrosCursos.add("Bacharelado em Relacoes Internacionais");
         filtrosCursos.add("Ciencias Biologicas");
+        filtrosCursos.add("Comum aos BI's");
         filtrosCursos.add("Engenharia Aeroespacial");
         filtrosCursos.add("Engenharia Ambiental e Urbana");
         filtrosCursos.add("Engenharia Biomedica");
@@ -81,8 +86,10 @@ public class Filtros {
         filtrosCursos.add("Engenharia de Gestao");
         filtrosCursos.add("Engenharia de Informacao");
         filtrosCursos.add("Engenharia de Materiais");
+        filtrosCursos.add("Engenharias");
         filtrosCursos.add("Filosofia");
         filtrosCursos.add("Fisica");
+        filtrosCursos.add("Licenciatura em Matematica");
         filtrosCursos.add("Licenciaturas");
         filtrosCursos.add("Quimica");
         return filtrosCursos;
@@ -108,6 +115,7 @@ public class Filtros {
     //Todos os centros
     private List<String> filtrosCentros;
     
+    //Pega todos os centros
     public List<String> getFiltrosCentros() {
         filtrosCentros = new ArrayList<>();
         filtrosCentros.add("CCNH");
@@ -132,9 +140,10 @@ public class Filtros {
         this.filtrosSelecCentros = filtrosSelecCentros;
     }
     
-    //Todas as areas de atuacao dos docentes
+    //Todas as áres de atuação dos docentes
     private List<String> filtrosAreaAtuacao;
     
+    //Pega todas as áres de atuação
     public List<String> getFiltrosAreaAtuacao() {
         filtrosAreaAtuacao = new ArrayList<>();
         filtrosAreaAtuacao.add("Ciencia da Computacao");
@@ -172,20 +181,16 @@ public class Filtros {
         else{
             return new ArrayList<>();
         }
-
     }
     
     //Limpa os filtros dos docentes selecionados
     public void limparFiltroDocente(){
-     
         filtrosSelecAreaAtuacao = null;
         filtrosSelecCentros = null;
-        
     }
 
 //----------------------------------------AutoComplete----------------------------------------------------------------------------------------
-    
-    
+
 //Disciplina----------------------------------------------------------------------------------------------------------    
     public List<Disciplina> completeDisciplina(String query) {
         
@@ -215,7 +220,6 @@ public class Filtros {
             }
         }
         return filteredEixos;
-        
     }
     
     //Curso-----------------------------------------------------------------------------------------------
@@ -231,16 +235,14 @@ public class Filtros {
             }
         }
         return filteredCursos;
-        
     }
     
-    //Area de atuacao do docente------------------------------------------------------------------------
+    //Área de atuação do docente------------------------------------------------------------------------
     
     public List<String> completeArea(String query){
         
         query = query.toLowerCase();
-        
-        
+
         List<String> filteredAreas = new ArrayList<>();
 
         for (String a : this.getFiltrosAreaAtuacao()) {
@@ -249,8 +251,5 @@ public class Filtros {
             }
         }
         return filteredAreas;
-        
     }
-
-  
 }
