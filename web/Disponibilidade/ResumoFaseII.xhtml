@@ -1,0 +1,294 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:head>
+        <title>Resumo Fase II</title>
+        <meta name="viewport" content="width=device-width"/>
+    </h:head>
+    <h:body>
+        <h:outputStylesheet library="css" name="style.css" />
+        <h:form prependId="false">
+            <p:layout fullPage="true">
+
+                <p:layoutUnit style="text-align:center" position="north" size="65"  resizable="true" closable="true" collapsible="true">
+                    <style type="text/css">
+                        .ui-widget{font-size:90% !important;}
+                    </style>
+                    <p:panel style="height: 43px">
+                        <h:commandLink value="Ajuda" style="position: relative; right: 460px; color: #2E8B57"
+                                       action="/Tutorial/Tutorial" target="_blank" immediate="true"/>
+
+                        <h:outputLabel value="Resumo da Fase II - Alocação" style="color: #2E8B57; font-family: 'Play'; font-size: 24px"/>
+                        <h:commandLink value="Logout" style="position: relative; left: 460px; color: #2E8B57"
+                                       action="#{loginBean.doLogout()}" immediate="true"/>
+                    </p:panel>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="west" size="170" header="Links Rápidos" style="text-align: center; font-size: small" resizable="true">
+
+                    <p:separator/>
+                    <p:commandButton value="Gerenciar Fases" id="btnGerenciar" style="width: 160px; font-size: smaller"
+                                     action="#{pessoaController.prepareFase()}" immediate="true"/>
+                    <p:separator/>
+                    <p:commandButton value="Resumo Afinidades" id="btnAfinidade" style="width: 160px; font-size: smaller"  
+                                     action="#{pessoaController.prepareAfinidades()}" immediate="true"/>
+                    <p:separator/>
+                    <p:commandButton value="Resumo Fase I" id="btnFase1" style="width: 160px; font-size: smaller"
+                                     action="#{pessoaController.prepareFaseI()}" immediate="true"/>
+                    <p:separator/>
+                    <p:commandButton value="Resumo Fase II" id="btnFase2" style="width: 160px; font-size: smaller"
+                                     action="#{pessoaController.prepareFaseII()}" immediate="true"/>
+                    <p:separator/>
+                    <p:commandButton value="Cadastro" id="btnCadastro" style="width: 160px; font-size: smaller"
+                                     action="#{pessoaController.prepareCadastro()}" immediate="true"/>
+                    <p:separator/>
+
+                </p:layoutUnit>
+
+                <p:layoutUnit id="layoutCentro" position="center" >
+
+                    <p:tabView dynamic="true" cache="true" id="tabV" style=" border-color: transparent">
+
+                        <p:tab title="Disciplinas">
+
+                            <p:panel header="Filtros" toggleable="true" toggleSpeed="500" closeSpeed="500"
+                                     style="width: 350px" collapsed="true" closeTitle="Painel">
+
+                                <h:panelGrid columns="1">
+
+                                    <h:panelGrid columns="2" cellpadding="5">
+                                        <p:selectCheckboxMenu value="#{turmaController.filtrosSelecEixos}" label="Eixos"
+                                                              filter="true" filterMatchMode="startsWith" panelStyle="width:350px" >
+                                            <f:selectItems value="#{turmaController.filtrosEixos}" />
+                                        </p:selectCheckboxMenu>
+
+                                        <p:selectCheckboxMenu value="#{turmaController.filtrosSelecCursos}" label="Cursos"
+                                                              filter="true" filterMatchMode="startsWith" panelStyle="width:350px">
+                                            <f:selectItems value="#{turmaController.filtrosCursos}" />
+                                        </p:selectCheckboxMenu>
+                                    </h:panelGrid>
+
+                                </h:panelGrid>
+
+                                <p:separator/>
+
+                                <h:panelGrid columns="2">
+
+                                    <p:commandButton id="buttonDisciplina" style="width: 30px; height: 30px; font-size: smaller; position: relative"
+                                                     actionListener="#{turmaController.filtrar()}"
+                                                     icon="ui-icon-search"
+                                                     update="@(form:turmasTable)">
+                                    </p:commandButton>
+                                    <p:commandButton style="width: 30px; height: 30px; font-size: smaller; position: relative"
+                                                     actionListener="#{turmaController.limparFiltro()}"
+                                                     icon="ui-icon-closethick"
+                                                     update="@all">
+                                    </p:commandButton>
+
+                                </h:panelGrid>
+
+                            </p:panel>
+
+                            <br/>
+
+                            <h:panelGrid id="painelDisciplina" columns="1" style=" alignment-adjust: central" styleClass="panelGridCenter">
+
+                                <p:dataTable var="turma" value="#{turmaController.turmas}" 
+                                             paginator="true" rows="10"
+                                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                             rowsPerPageTemplate="5,10,15"
+                                             selection="#{turmaController.selecionada}" id="turmasTable"
+                                             rowKey="#{turma.ID}"
+                                             style="width: 700px" >
+
+                                    <p:ajax event="rowSelectRadio" update="turmasTable"/> 
+
+                                    <p:column selectionMode="single" style="width:10%;text-align:center"/>
+
+                                    <p:column headerText="Disciplina" style="width: 50%" filterBy="#{turma.disciplina.nome}" 
+                                              filterMatchMode="contains">
+                                        <h:outputText value="#{turma.disciplina.nome}" />
+                                    </p:column>
+                                    <p:column style="width: 15%" headerText="Turma">
+                                        <h:outputText value="#{turma.codturma}"/>
+                                    </p:column>
+                                    <p:column style="width: 15%" headerText="Turno">
+                                        <h:outputText value="#{turma.turno}"/>
+                                    </p:column>
+                                    <p:column style="width: 20%" headerText="Campus">
+                                        <h:outputText value="#{turma.campus}"/>
+                                    </p:column>
+                                    <p:column style="width: 25%" headerText="Solicitações">
+                                        <h:outputText value="#{turmaController.solicitacoes(turma.ID)}"/>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                                <p:commandButton id="viewDocentes" style="width: 160px; height: 30px; font-size: smaller; position: relative; top: 10px"
+                                                 value="Ver detalhes" actionListener="#{turmaController.preencherResumoTurmas()}"
+                                                 immediate="true" oncomplete="PF('turmaDialog').show();" icon="ui-icon-search">
+                                </p:commandButton>
+
+                            </h:panelGrid>
+
+                            <p:dialog  id="dialogOferta" header="Solicitações da Turma" widgetVar="turmaDialog" dynamic="true"
+                                       draggable="false" resizable="false" maximizable="true" showEffect="fade">
+
+                                <h:panelGrid columns="1">
+
+                                    <b>Turma: </b>
+
+                                    <h:outputText value="#{turmaController.selecionada.disciplina.nome} - #{turmaController.selecionada.codturma} 
+                                                  Turno(#{turmaController.selecionada.turno}) Campus(#{turmaController.selecionada.campus})" />
+
+                                    <br/>
+
+                                    <p:dataTable var="d" value="#{turmaController.dispModel}" paginator="true" rows="10"
+                                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                                 rowsPerPageTemplate="5,10,15"  id="dispTable" lazy="false"
+                                                 emptyMessage="Nenhum resultado foi encontrado para esse critério de busca"
+                                                 style="width: 400px; "
+                                                 styleClass="panelCenter"
+                                                 paginatorPosition="bottom">
+
+                                        <p:column headerText="Docente Solicitante" style="width: 60%">
+                                            <h:outputText value="#{d.pessoa.nome}" />
+                                        </p:column>
+                                        <p:column headerText="Prioridade no Planejamento" style="width: 40%">
+                                            <h:outputText value="#{d.ordemPreferencia}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                    <p:commandButton value="OK" update="@(form:turmasTable)"/>
+
+                                </h:panelGrid>
+
+                            </p:dialog>
+
+                        </p:tab>
+
+                        <p:tab title="Docentes">
+
+                            <p:panel id="toggleableD" header="Filtros" toggleable="true" toggleSpeed="550" closeSpeed="500"
+                                     widgetVar="panelFiltroDocente" style="margin-bottom:20px; width: 350px; font-size: medium; "
+                                     collapsed="true" closeTitle="Painel">
+
+                                <h:panelGrid columns="2"  cellspacing="10">
+
+                                    <p:selectCheckboxMenu value="#{docenteController.filtrosSelecAreaAtuacao}" label="Areas atuacao"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width:350px">
+                                        <f:selectItems value="#{docenteController.filtrosAreaAtuacao}" />
+                                    </p:selectCheckboxMenu>
+
+                                </h:panelGrid>
+
+                                <p:separator/>
+
+                                <h:panelGrid columns="2">
+                                    <p:commandButton    icon="ui-icon-search"  actionListener="#{docenteController.filtrar()}"
+                                                        update="@(form:docentesTable)"  style="width: 30px; height: 25px" title="Filtrar docentes"
+                                                        >
+                                    </p:commandButton>
+
+                                    <p:commandButton    ajax="false"  actionListener="#{docenteController.limparFiltro()}"
+                                                        update="@(form:docentesTable)" icon="ui-icon-closethick"
+                                                        style="width: 30px; height: 25px" title="Limpar filtros">
+                                    </p:commandButton>
+
+                                </h:panelGrid>
+
+                            </p:panel>
+
+                            <h:panelGrid id="painelDocente" columns="1" style=" alignment-adjust: central" styleClass="panelGridCenter">
+                                <p:dataTable var="docente" value="#{docenteController.docenteDataModel}"
+                                             paginator="true" rows="10"
+                                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                             rowsPerPageTemplate="5,10,15"
+                                             selection="#{docenteController.docente}" id="docentesTable"
+                                             rowKey="#{docente.ID}"
+                                             style="width: 700px" >
+
+                                    <p:ajax event="rowSelectRadio" update="docentesTable"/>
+
+                                    <p:column selectionMode="single" style="width:5%;text-align:center"/>
+
+                                    <p:column headerText="Docente" style="width: 33%" filterBy="#{docente.nome}" filterMatchMode="contains">
+                                        <h:outputText value="#{docente.nome}" style="width: 33%"/>
+                                    </p:column>
+                                    <p:column headerText="Turmas Selecionadas" style="width: 15%; text-align: center">
+                                        <h:outputText value="#{docenteController.totalTurmas(docente)}" style="width: 15%"/>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                                <p:commandButton id="viewDisciplinas" style="width: 160px; height: 30px; font-size: smaller; position: relative; top: 10px"
+                                                 value="Ver detalhes" actionListener="#{docenteController.buscarSelecionadas()}"
+                                                 immediate="true" oncomplete="PF('dispDocenteDialog').show();" icon="ui-icon-search"
+                                                 update="dialogDocente" >
+                                </p:commandButton>
+                            </h:panelGrid>
+
+
+
+                            <p:dialog  id="dialogDocente" header="Turmas escolhidas pelo docente" widgetVar="dispDocenteDialog" dynamic="true"
+                                       draggable="false" resizable="false" maximizable="true" showEffect="fade">
+
+                                <h:panelGrid columns="1">
+
+                                    <b>Docente:</b>
+
+                                    <h:outputText value="#{docenteController.docente.nome}" />
+
+                                    <br/>
+
+                                    <p:dataTable var="turma" value="#{docenteController.turmaModel}" paginator="true" rows="10"
+                                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                                 rowsPerPageTemplate="5,10,15"  id="disponibilidadeTableDocente"
+                                                 emptyMessage="Nenhum resultado foi encontrado para esse critério de busca"
+                                                 rowKey="#{turma.ID}"
+                                                 style="width: 800px; "
+                                                 styleClass="panelCenter"
+                                                 paginatorPosition="top">
+
+                                        <p:column headerText="Disciplina" style="width: 40%">
+                                            <h:outputText value="#{turma.disciplina.nome}"/>
+                                        </p:column>
+                                        <p:column headerText="Código" style="width: 10%">
+                                            <h:outputText value="#{turma.codturma}"/>
+                                        </p:column>
+                                        <p:column headerText="Turno" style="width: 10%">
+                                            <h:outputText value="#{turma.turno}"/>
+                                        </p:column>
+                                        <p:column headerText="Campus" style="width: 10%">
+                                            <h:outputText value="#{turma.campus}"/>
+                                        </p:column>
+                                        <p:column headerText="Prioridade" style="width: 20%">
+                                            <h:outputText value="#{docenteController.prioridadeTurma(turma)}"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                    <p:commandButton value="OK" update="@(form:docentesTable)"/>
+
+                                </h:panelGrid>
+
+                            </p:dialog>
+
+                        </p:tab>
+
+                    </p:tabView>
+
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+
+    </h:body>
+</html>
+
+
+
