@@ -8,33 +8,45 @@
         <title>Cadastros</title>
     </h:head>
     <h:body>
+        <h:outputStylesheet library="css" name="style.css" />
         <h:form>
 
             <p:layout fullPage="true">
 
-                <p:layoutUnit style="text-align:center" position="north" size="70"  resizable="true" closable="true" collapsible="true" >  
-
-                    <h:commandLink value="Logout" style="position: relative; left: 650px; top: 10px; color: #2E8B57" 
-                                   action="#{loginBean.doLogout()}" immediate="true"/>
-
+                <p:layoutUnit style="text-align:center" position="north" size="65"  resizable="true" closable="true" collapsible="true">
                     <style type="text/css">
-                        .ui-widget{font-size:95% !important;}
+                        .ui-widget{font-size:90% !important;}
                     </style>
-                    <div style="color: #2E8B57 ;font-family: 'Play', serif;font-size: 24px; position: relative; top: 10px">Cadastros</div>
+                    <p:panel style="height: 43px">
+                        <h:commandLink value="Ajuda" style="position: relative; right: 460px; color: #2E8B57"
+                                       action="/Tutorial/Tutorial" target="_blank" immediate="true"/>
 
+                        <h:outputLabel value="Cadastro de Dados no Sistema" style="color: #2E8B57; font-family: 'Play'; font-size: 24px"/>
+                        <h:commandLink value="Logout" style="position: relative; left: 460px; color: #2E8B57"
+                                       action="#{loginBean.doLogout()}" immediate="true"/>
+                    </p:panel>
                 </p:layoutUnit> 
 
-                <p:layoutUnit position="west" size="160" header="Links Rápidos" style="text-align: center" resizable="true"  >  
+                <p:layoutUnit position="west" size="170" header="Links Rápidos" style="text-align: center; font-size: small" resizable="true">  
 
-                    <p:commandButton  value="Início" id="btnVoltar"  style="width: 140px; position: relative; top: 5px"  action="/index" immediate="true"/>
-                    <br/>
-                    <p:commandButton  value="Histórico Afinidades" id="btnAfinidades"  style="width: 140px; position: relative; top: 10px"  action="/Afinidades/LogsAfinidades" immediate="true"/>
-                    <br/>
-                    <p:commandButton  value="Histórico Disponibilidades" id="btnDisponibilidades"  style="width: 140px; position: relative; top: 15px"  action="/Disponibilidade/LogsDisponibilidades" immediate="true"/>
-                    <br/>
-                </p:layoutUnit> 
+                    <p:separator/>
+                        <p:commandButton value="Gerenciar Fases" id="btnGerenciar" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareFase()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Resumo Afinidades" id="btnAfinidade" style="width: 160px; font-size: smaller"  
+                                         action="#{pessoaController.prepareAfinidades()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Resumo Fase I" id="btnFase1" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareFaseI()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Resumo Fase II" id="btnFase2" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareFaseII()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Cadastro" id="btnCadastro" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareCadastro()}" immediate="true"/>
+                        <p:separator/>
 
-
+                </p:layoutUnit>
 
                 <p:layoutUnit position="center">
 
@@ -275,10 +287,18 @@
                                     </h:selectOneMenu>
                                 </h:panelGrid>
                                 <p:separator/>
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <p:outputLabel for="nivel" value="Nível de Acesso" />
+                                    <p:selectOneRadio id="nivel" value="#{pessoaController.nivel}">
+                                        <f:selectItem itemLabel="Coordenador" itemValue="2" />
+                                        <f:selectItem itemLabel="Diretor" itemValue="1" />
+                                    </p:selectOneRadio>
+                                </h:panelGrid>
                                 <p:commandButton style="width: 97px; height: 30px; font-size: small; position: relative; "  
                                                  ajax="true"  value="Salvar" actionListener="#{pessoaController.salvarAdm()}"
                                                  update="@(form:msgs),admTable,criarAdm" icon="ui-icon-disk"> 
                                 </p:commandButton>
+                                
 
                             </p:panel>
 
@@ -302,7 +322,7 @@
                                             <p:column headerText="Curso"  sortBy="#{turma1.curso}">
                                                 <h:outputText value="#{turma1.curso}" />
                                             </p:column>
-                                            <p:column headerText="Disciplina" >
+                                            <p:column headerText="Disciplina">
                                                 <h:outputText value="#{turma1.disciplina.nome}" />
                                             </p:column>
                                             <p:column headerText="Turno"  style="width: 8%; text-align: center">
@@ -471,18 +491,18 @@
                                              id="turmasTable" 
                                              lazy="true"   rowKey="#{turma.ID}">
 
-                                    <p:column headerText="Disciplina"  sortBy="">
+                                    <p:column headerText="Disciplina">
                                         <h:outputText value="#{turma.disciplina.nome}" />
                                     </p:column>
-                                    
+
                                     <p:column headerText="Turma" style="width: 5%">
                                         <h:outputText value="#{turma.codturma}"/>
                                     </p:column>
-                                    
+
                                     <p:column headerText="Câmpus" style="width: 7%">
                                         <h:outputText value="#{turma.campus}"/>
                                     </p:column>
-                                    
+
                                     <p:column headerText="Turno" style="width: 5%">
                                         <h:outputText value="#{turma.turno}"/>
                                     </p:column>
@@ -509,13 +529,58 @@
 
                             </h:panelGrid>
 
+                            <p:panel header="Cadastrar Nova Turma"  >
+                                <h:panelGrid columns="2" id="criarTurma">
+                                    <h:outputText value="Disciplina: "/>
+                                    <h:inputText value="#{turmaController.nomeDisciplina}" size="100"/>
+
+                                    <h:outputText value="Código: "/>
+                                    <h:inputText value="#{turmaController.codDisciplina}" size="30"/>
+
+                                    <h:outputText value="Turma: "/>
+                                    <h:inputText value="#{turmaController.codTurma}" size="30"/>
+
+                                    <h:panelGrid columns="2" cellpadding="5">
+                                        <p:outputLabel for="campus" value="Campus:" />
+                                        <p:selectOneRadio id="campus" value="#{turmaController.campus}">
+                                            <f:selectItem itemLabel="SA" itemValue="SA" />
+                                            <f:selectItem itemLabel="SB" itemValue="SBC" />
+                                        </p:selectOneRadio>
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="2" cellpadding="5">
+                                        <p:outputLabel for="turno" value="Turno:" />
+                                        <p:selectOneRadio id="turno" value="#{turmaController.turno}">
+                                            <f:selectItem itemLabel="D" itemValue="D" />
+                                            <f:selectItem itemLabel="N" itemValue="N" />
+                                        </p:selectOneRadio>
+                                    </h:panelGrid>
+
+                                    <h:outputText value="Horários Teoria: "/>
+                                    <h:inputText value="#{turmaController.teoriaHorarios}" size="100"/>
+
+                                    <h:outputText value="Horários Prática: "/>
+                                    <h:inputText value="#{turmaController.praticaHorarios}" size="100"/>
+
+                                    <h:outputText value="Curso: "/>
+                                    <h:inputText value="#{turmaController.curso}" size="30"/>
+
+                                </h:panelGrid>
+                                <p:separator/>
+                                <p:commandButton style="width: 97px; height: 30px; font-size: small; position: relative; "  
+                                                 ajax="true"  value="Salvar" actionListener="#{turmaController.novaTurma()}"
+                                                 update="@(form:msgs),turmasTable,criarTurma" icon="ui-icon-disk"> 
+                                </p:commandButton>
+
+                            </p:panel>
+
                         </p:tab>
 
 
                     </p:tabView>
 
                 </p:layoutUnit>
-                <p:layoutUnit id="southPanel" position="south" style="text-align:center" size="100"  resizable="true" closable="true" collapsible="true">  
+                <p:layoutUnit id="southPanel" position="south" style="text-align:center" size="70"  resizable="true" closable="true" collapsible="true">  
                     <p:messages id="msgs" showDetail="true" showSummary="false"/>   
                 </p:layoutUnit>
 
