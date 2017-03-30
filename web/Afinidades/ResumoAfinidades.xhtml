@@ -14,227 +14,247 @@
         <h:form  prependId="false">
             <p:layout fullPage="true"> 
 
-                <p:layoutUnit style="text-align:center" position="north" size="65"  resizable="true" 
-                              closable="true" collapsible="true">
-                    <h:commandLink value="Logout" style="position: relative; left: 650px; top: 10px; color: #2E8B57" 
-                                   action="#{loginBean.doLogout()}" immediate="true"/>
+                <p:layoutUnit style="text-align:center" position="north" size="65"  resizable="true" closable="true" collapsible="true">
                     <style type="text/css">
-                        .ui-widget{font-size:95% !important;}
+                        .ui-widget{font-size:90% !important;}
                     </style>
-                    <div style="color: #2E8B57 ;font-family: 'Play', serif;font-size: 24px; position: relative; top: 10px">Histórico de afinidades</div>
+                    <p:panel style="height: 43px">
+                        <h:commandLink value="Ajuda" style="position: relative; right: 460px; color: #2E8B57"
+                                       action="/Tutorial/Tutorial" target="_blank" immediate="true"/>
 
+                        <h:outputLabel value="Resumo da Escolha de Afinidades" style="color: #2E8B57; font-family: 'Play'; font-size: 24px"/>
+                        <h:commandLink value="Logout" style="position: relative; left: 460px; color: #2E8B57"
+                                       action="#{loginBean.doLogout()}" immediate="true"/>
+                    </p:panel>
                 </p:layoutUnit> 
 
-                <p:layoutUnit position="west" size="155" header="Links Rápidos" style="text-align: center; font-size: small" resizable="true"  >  
+                <p:layoutUnit position="west" size="170" header="Links Rápidos" style="text-align: center; font-size: small" resizable="true">  
 
-                    <p:commandButton  value="Início" id="btnVoltar"  style="width: 140px; position: relative; top: 5px"  action="/index" immediate="true"/>
-                    <br/>
-                    <p:commandButton  value="Fase I alocação" id="btnFaseI"  style="width: 140px; position: relative; top: 10px"  action="/Disponibilidade/EscolhaQuad" immediate="true"/>
-                    <br/>
+                    <p:separator/>
+                    <p:commandButton value="Gerenciar Fases" id="btnGerenciar" style="width: 160px; font-size: smaller"
+                                     action="#{pessoaController.prepareFase()}" immediate="true"/>
+                    <p:separator/>
+                    <p:commandButton value="Resumo Afinidades" id="btnAfinidade" style="width: 160px; font-size: smaller"  
+                                     action="#{pessoaController.prepareAfinidades()}" immediate="true"/>
+                    <p:separator/>
+                    <p:commandButton value="Resumo Fase I" id="btnFase1" style="width: 160px; font-size: smaller"
+                                     action="#{pessoaController.prepareFaseI()}" immediate="true"/>
+                    <p:separator/>
+                    <p:commandButton value="Resumo Fase II" id="btnFase2" style="width: 160px; font-size: smaller"
+                                     action="#{pessoaController.prepareFaseII()}" immediate="true"/>
+                    <p:separator/>
+                    <p:commandButton value="Cadastro" id="btnCadastro" style="width: 160px; font-size: smaller"
+                                     action="#{pessoaController.prepareCadastro()}" immediate="true"/>
+                    <p:separator/>                   
+
                 </p:layoutUnit> 
 
                 <p:layoutUnit id="layoutCentro" position="center" >  
 
                     <p:tabView dynamic="true" cache="true" id="tabV" style=" border-color: transparent">
                         <p:tab title="Disciplinas">
-                           
-
-                                <p:panel id="toggleable" header="Filtros" toggleable="true" toggleSpeed="550" closeSpeed="500" 
-                                         widgetVar="panel" style="margin-bottom:20px; width: 350px; font-size: medium; " collapsed="true" closeTitle="Painel">
-
-                                    <h:panelGrid columns="2"  cellspacing="10">
 
 
-                                        <p:selectCheckboxMenu value="#{disciplinaController.filtrosSelecEixos}" label="Eixos"
-                                                              filter="true" filterMatchMode="startsWith" panelStyle="width:350px" >
-                                            <f:selectItems value="#{disciplinaController.filtrosEixos}" />
-                                        </p:selectCheckboxMenu>
+                            <p:panel id="toggleable" header="Filtros" toggleable="true" toggleSpeed="550" closeSpeed="500" 
+                                     widgetVar="panel" style="margin-bottom:20px; width: 350px; font-size: medium; " collapsed="true" closeTitle="Painel">
 
-                                        <p:selectCheckboxMenu value="#{disciplinaController.filtrosSelecCursos}" label="Cursos"
-                                                              filter="true" filterMatchMode="startsWith" panelStyle="width:350px">
-                                            <f:selectItems value="#{disciplinaController.filtrosCursos}" />
-                                        </p:selectCheckboxMenu>
-
-                                    </h:panelGrid>
-
-                                    <p:separator/>
-
-                                    <h:panelGrid columns="2">
-                                        <p:commandButton    icon="ui-icon-search"  actionListener="#{disciplinaController.filtrar()}"
-                                                            update="@(form:disciplinasTable)"  style="width: 30px; height: 25px" title="Filtrar disciplinas"
-                                                            >
-                                        </p:commandButton>
-
-                                        <p:commandButton    ajax="false"  actionListener="#{disciplinaController.limparFiltro()}"
-                                                            update="@(form:disciplinasTable)" icon="ui-icon-closethick" 
-                                                            style="width: 30px; height: 25px" title="Limpar filtros">
-                                        </p:commandButton>
+                                <h:panelGrid columns="2"  cellspacing="10">
 
 
+                                    <p:selectCheckboxMenu value="#{disciplinaController.filtrosSelecEixos}" label="Eixos"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width:350px" >
+                                        <f:selectItems value="#{disciplinaController.filtrosEixos}" />
+                                    </p:selectCheckboxMenu>
 
-                                    </h:panelGrid>
+                                    <p:selectCheckboxMenu value="#{disciplinaController.filtrosSelecCursos}" label="Cursos"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width:350px">
+                                        <f:selectItems value="#{disciplinaController.filtrosCursos}" />
+                                    </p:selectCheckboxMenu>
 
+                                </h:panelGrid>
 
+                                <p:separator/>
 
-                                </p:panel>
-
-                                <h:panelGrid id="painel" columns="1" style=" alignment-adjust: central" styleClass="panelGridCenter">
-                                    <p:dataTable var="disciplina" value="#{disciplinaController.disciplinaDataModel}" 
-                                                 scrollRows="20" scrollable="true"
-                                                 scrollHeight="430" 
-                                                 selection="#{disciplinaController.selecionada}" id="disciplinasTable"
-                                                 rowKey="#{disciplina.ID}"
-                                                 style="width: 700px" >
-
-                                        <p:ajax event="rowSelectRadio" update="disciplinasTable"/> 
-
-
-
-                                        <p:column selectionMode="single" style="width:5%;text-align:center"/>
-
-                                        <p:column headerText="Disciplina" style="width: 33%" filterBy="#{disciplina.nome}" filterMatchMode="contains">
-                                            <h:outputText value="#{disciplina.nome}" style="width: 33%"/>
-                                        </p:column>  
-                                        <p:column headerText="Qdt. Afinidades" style="width: 15%; text-align: center">
-                                            <h:outputText value="#{disciplinaController.qdtAfinidades(disciplina)}" style="width: 15%"/>
-                                        </p:column>
-
-                                    </p:dataTable>
-
-                                    <p:commandButton id="viewDocentes" style="width: 160px; height: 30px; font-size: smaller; position: relative; top: 10px"  
-                                                     value="Ver detalhes" actionListener="#{disciplinaController.preencherAfinidadesDisciplina()}"
-                                                     immediate="true" oncomplete="PF('afinidadeDialog').show();" icon="ui-icon-search"
-                                                     update ="dialogDisciplina" > 
+                                <h:panelGrid columns="2">
+                                    <p:commandButton    icon="ui-icon-search"  actionListener="#{disciplinaController.filtrar()}"
+                                                        update="@(form:disciplinasTable)"  style="width: 30px; height: 25px" title="Filtrar disciplinas"
+                                                        >
                                     </p:commandButton>
+
+                                    <p:commandButton    ajax="false"  actionListener="#{disciplinaController.limparFiltro()}"
+                                                        update="@(form:disciplinasTable)" icon="ui-icon-closethick" 
+                                                        style="width: 30px; height: 25px" title="Limpar filtros">
+                                    </p:commandButton>
+
+
 
                                 </h:panelGrid>
 
 
-                            
+
+                            </p:panel>
+
+                            <h:panelGrid id="painel" columns="1" style=" alignment-adjust: central" styleClass="panelGridCenter">
+                                <p:dataTable var="disciplina" value="#{disciplinaController.disciplinaDataModel}" 
+                                             paginator="true" rows="10"
+                                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                             rowsPerPageTemplate="5,10,15" 
+                                             selection="#{disciplinaController.selecionada}" id="disciplinasTable"
+                                             rowKey="#{disciplina.ID}"
+                                             style="width: 700px" >
+
+                                    <p:ajax event="rowSelectRadio" update="disciplinasTable"/> 
+
+
+
+                                    <p:column selectionMode="single" style="width:5%;text-align:center"/>
+
+                                    <p:column headerText="Disciplina" style="width: 33%" filterBy="#{disciplina.nome}" filterMatchMode="contains">
+                                        <h:outputText value="#{disciplina.nome}" style="width: 33%"/>
+                                    </p:column>  
+                                    <p:column headerText="Qdt. Afinidades" style="width: 15%; text-align: center">
+                                        <h:outputText value="#{disciplinaController.qdtAfinidades(disciplina)}" style="width: 15%"/>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                                <p:commandButton id="viewDocentes" style="width: 160px; height: 30px; font-size: smaller; position: relative; top: 10px"  
+                                                 value="Ver detalhes" actionListener="#{disciplinaController.preencherAfinidadesDisciplina()}"
+                                                 immediate="true" oncomplete="PF('afinidadeDialog').show();" icon="ui-icon-search"
+                                                 update ="dialogDisciplina" > 
+                                </p:commandButton>
+
+                            </h:panelGrid>
+
+
+
                             <!--                            -->
-                            
+
                             <p:dialog  id="dialogDisciplina" header="Afinidades da disciplina" widgetVar="afinidadeDialog" dynamic="true"
                                        draggable="false" resizable="false" maximizable="true" showEffect="fade">
 
                                 <h:panelGrid columns="1">
-                                    
-                                  
-                                        
-                                        <b>Disciplina:</b>
-                                    
+
+
+
+                                    <b>Disciplina:</b>
+
                                     <h:outputText value="#{disciplinaController.selecionada.nome}" />
-                                    
+
                                     <br/>
 
                                     <h:outputText value="Mostrar apenas docentes que adicionaram as disciplinas: " />
-                                    
+
                                     <p:selectBooleanButton id="booleanDiscButton" value="#{disciplinaController.mostrarAdicionadas}" onLabel="Sim" offLabel="Não" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
                                         <p:ajax update="afinidadeTable" listener="#{disciplinaController.verSoAdicionadas()}" />
                                     </p:selectBooleanButton>
-                                        
+
                                     <br/>
-                                    
-                                   
-                                    
+
+
+
                                     <p:dataTable var="af" value="#{disciplinaController.afinidadesDaDisciplina}" paginator="true" rows="10"
-                                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                                     rowsPerPageTemplate="5,10,15"  id="afinidadeTable" lazy="true"
-                                                     emptyMessage="Nenhum resultado foi encontrado para esse critério de busca"
-                                                     style="width: 800px; " 
-                                                     styleClass="panelCenter" 
-                                                     paginatorPosition="top"
-                                                     rowStyleClass="#{af.estado eq 'Removida' ? 'colored' : null}" >
+                                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                                 rowsPerPageTemplate="5,10,15"  id="afinidadeTable" lazy="true"
+                                                 emptyMessage="Nenhum resultado foi encontrado para esse critério de busca"
+                                                 style="width: 800px; " 
+                                                 styleClass="panelCenter" 
+                                                 paginatorPosition="top"
+                                                 rowStyleClass="#{af.estado eq 'Removida' ? 'colored' : null}" >
 
-                                            <p:column headerText="Docente">
-                                                <h:outputText value="#{af.pessoa.nome}" />
-                                            </p:column>
-                                            <p:column headerText="Disciplina">
-                                                <h:outputText value="#{af.disciplina.nome}" />
-                                            </p:column>
-                                            <p:column headerText="Data">
-                                                <h:outputText value="#{af.dataAcao}">
-                                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
-                                                </h:outputText>
-                                            </p:column>
-                                            <p:column headerText="Estado">
-                                                <h:outputText value="#{af.estado}"/>
-                                            </p:column>
+                                        <p:column headerText="Docente">
+                                            <h:outputText value="#{af.pessoa.nome}" />
+                                        </p:column>
+                                        <p:column headerText="Disciplina">
+                                            <h:outputText value="#{af.disciplina.nome}" />
+                                        </p:column>
+                                        <!--p:column headerText="Data">
+                                            <h:outputText value="#{af.dataAcao}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            </h:outputText>
+                                        </p:column-->
+                                        <p:column headerText="Estado">
+                                            <h:outputText value="#{af.estado}"/>
+                                        </p:column>
 
-                                        </p:dataTable>
+                                    </p:dataTable>
+
+                                    <p:commandButton value="OK" update="@(form:disciplinasTable)"/>
 
                                 </h:panelGrid>
 
                             </p:dialog>
 
                         </p:tab>
-                        
-                        
+
+
                         <p:tab title="Docentes">
-                           
-
-                                <p:panel id="toggleableD" header="Filtros" toggleable="true" toggleSpeed="550" closeSpeed="500" 
-                                         widgetVar="panelFiltroDocente" style="margin-bottom:20px; width: 350px; font-size: medium; "
-                                         collapsed="true" closeTitle="Painel">
-
-                                    <h:panelGrid columns="2"  cellspacing="10">
-
-                                        <p:selectCheckboxMenu value="#{docenteController.filtrosSelecAreaAtuacao}" label="Areas atuacao"
-                                                              filter="true" filterMatchMode="startsWith" panelStyle="width:350px">
-                                            <f:selectItems value="#{docenteController.filtrosAreaAtuacao}" />
-                                        </p:selectCheckboxMenu>
-
-                                    </h:panelGrid>
-
-                                    <p:separator/>
-
-                                    <h:panelGrid columns="2">
-                                        <p:commandButton    icon="ui-icon-search"  actionListener="#{docenteController.filtrar()}"
-                                                            update="@(form:docentesTable)"  style="width: 30px; height: 25px" title="Filtrar docentes"
-                                                            >
-                                        </p:commandButton>
-
-                                        <p:commandButton    ajax="false"  actionListener="#{docenteController.limparFiltro()}"
-                                                            update="@(form:docentesTable)" icon="ui-icon-closethick" 
-                                                            style="width: 30px; height: 25px" title="Limpar filtros">
-                                        </p:commandButton>
 
 
+                            <p:panel id="toggleableD" header="Filtros" toggleable="true" toggleSpeed="550" closeSpeed="500" 
+                                     widgetVar="panelFiltroDocente" style="margin-bottom:20px; width: 350px; font-size: medium; "
+                                     collapsed="true" closeTitle="Painel">
 
-                                    </h:panelGrid>
+                                <h:panelGrid columns="2"  cellspacing="10">
 
+                                    <p:selectCheckboxMenu value="#{docenteController.filtrosSelecAreaAtuacao}" label="Areas atuacao"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width:350px">
+                                        <f:selectItems value="#{docenteController.filtrosAreaAtuacao}" />
+                                    </p:selectCheckboxMenu>
 
-
-                                </p:panel>
-
-                                <h:panelGrid id="painelDocente" columns="1" style=" alignment-adjust: central" styleClass="panelGridCenter">
-                                    <p:dataTable var="docente" value="#{docenteController.docenteDataModel}" 
-                                                 scrollRows="20" scrollable="true"
-                                                 scrollHeight="430" 
-                                                 selection="#{docenteController.docente}" id="docentesTable"
-                                                 rowKey="#{docente.ID}"
-                                                 style="width: 700px" >
-
-                                        <p:ajax event="rowSelectRadio"/> 
-
-
-
-                                        <p:column selectionMode="single" style="width:5%;text-align:center"/>
-
-                                        <p:column headerText="Docente" style="width: 33%" filterBy="#{docente.nome}" filterMatchMode="contains">
-                                            <h:outputText value="#{docente.nome}" style="width: 33%"/>
-                                        </p:column>  
-                                        <p:column headerText="Qdt. Afinidades" style="width: 15%; text-align: center">
-                                            <h:outputText value="#{docenteController.qtdAfinidades(docente)}" style="width: 15%"/>
-                                        </p:column>
-
-                                    </p:dataTable>
-
-                                    <p:commandButton id="viewDisciplinas" style="width: 160px; height: 30px; font-size: smaller; position: relative; top: 10px"  
-                                                     value="Ver detalhes" actionListener="#{docenteController.preencherAfinidadesDoDocente()}"
-                                                     immediate="true" oncomplete="PF('afinidadeDocenteDialog').show();" icon="ui-icon-search"
-                                                     update="dialogDocente" > 
-                                    </p:commandButton>
                                 </h:panelGrid>
+
+                                <p:separator/>
+
+                                <h:panelGrid columns="2">
+                                    <p:commandButton    icon="ui-icon-search"  actionListener="#{docenteController.filtrar()}"
+                                                        update="@(form:docentesTable)"  style="width: 30px; height: 25px" title="Filtrar docentes"
+                                                        >
+                                    </p:commandButton>
+
+                                    <p:commandButton    ajax="false"  actionListener="#{docenteController.limparFiltro()}"
+                                                        update="@(form:docentesTable)" icon="ui-icon-closethick" 
+                                                        style="width: 30px; height: 25px" title="Limpar filtros">
+                                    </p:commandButton>
+
+
+
+                                </h:panelGrid>
+
+
+
+                            </p:panel>
+
+                            <h:panelGrid id="painelDocente" columns="1" style=" alignment-adjust: central" styleClass="panelGridCenter">
+                                <p:dataTable var="docente" value="#{docenteController.docenteDataModel}" 
+                                             paginator="true" rows="10"
+                                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                             rowsPerPageTemplate="5,10,15"
+                                             selection="#{docenteController.docente}" id="docentesTable"
+                                             rowKey="#{docente.ID}"
+                                             style="width: 700px" >
+
+                                    <p:ajax event="rowSelectRadio" update="docentesTable"/> 
+
+
+
+                                    <p:column selectionMode="single" style="width:5%;text-align:center"/>
+
+                                    <p:column headerText="Docente" style="width: 33%" filterBy="#{docente.nome}" filterMatchMode="contains">
+                                        <h:outputText value="#{docente.nome}" style="width: 33%"/>
+                                    </p:column>  
+                                    <p:column headerText="Qdt. Afinidades" style="width: 15%; text-align: center">
+                                        <h:outputText value="#{docenteController.qtdAfinidades(docente)}" style="width: 15%"/>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                                <p:commandButton id="viewDisciplinas" style="width: 160px; height: 30px; font-size: smaller; position: relative; top: 10px"  
+                                                 value="Ver detalhes" actionListener="#{docenteController.preencherAfinidadesDoDocente()}"
+                                                 immediate="true" oncomplete="PF('afinidadeDocenteDialog').show();" icon="ui-icon-search"
+                                                 update="dialogDocente" > 
+                                </p:commandButton>
+                            </h:panelGrid>
 
 
 
@@ -242,25 +262,25 @@
                                        draggable="false" resizable="false" maximizable="true" showEffect="fade">
 
                                 <h:panelGrid columns="1">
-                                    
-                                  
-                                        
-                                        <b>Docente:</b>
-                                    
+
+
+
+                                    <b>Docente:</b>
+
                                     <h:outputText value="#{docenteController.docente.nome}" />
-                                    
+
                                     <br/>
 
                                     <h:outputText value="Mostrar apenas disciplinas adicionadas: " />
-                                    
+
                                     <p:selectBooleanButton id="value2" value="#{docenteController.mostrarAdicionadas}" onLabel="Sim" offLabel="Não" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">
                                         <p:ajax update="afinidadeTableDocente" listener="#{docenteController.verSoAdicionadas()}" />
                                     </p:selectBooleanButton>
-                                        
+
                                     <br/>
-                                    
-                                   
-                                    
+
+
+
                                     <p:dataTable var="af" value="#{docenteController.afinidadesDoDocente}" paginator="true" rows="10"
                                                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                                  rowsPerPageTemplate="5,10,15"  id="afinidadeTableDocente" lazy="true"
@@ -273,22 +293,24 @@
                                         <p:column headerText="Disciplina">
                                             <h:outputText value="#{af.disciplina.nome}" />
                                         </p:column>
-                                        <p:column headerText="Data">
+                                        <!--p:column headerText="Data">
                                             <h:outputText value="#{af.dataAcao}">
                                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
                                             </h:outputText>
-                                        </p:column>
+                                        </p:column-->
                                         <p:column headerText="Estado">
                                             <h:outputText value="#{af.estado}"/>
                                         </p:column>
 
                                     </p:dataTable>
 
+                                    <p:commandButton value="OK" update="@(form:docentesTable)"/>
+
                                 </h:panelGrid>
 
                             </p:dialog>
 
-                            
+
 
                         </p:tab>
 
