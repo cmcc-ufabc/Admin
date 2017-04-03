@@ -151,14 +151,14 @@
                                                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                                  rowsPerPageTemplate="5,10,15"  id="dispTable" lazy="false"
                                                  emptyMessage="Nenhum resultado foi encontrado para esse critério de busca"
-                                                 style="width: 400px; "
+                                                 style="width: 500px"
                                                  styleClass="panelCenter"
                                                  paginatorPosition="bottom">
 
-                                        <p:column headerText="Docente Solicitante" style="width: 60%">
+                                        <p:column headerText="Docente Solicitante" style="width: 70%">
                                             <h:outputText value="#{d.pessoa.nome}" />
                                         </p:column>
-                                        <p:column headerText="Prioridade no Planejamento" style="width: 40%">
+                                        <p:column headerText="Prioridade no Planejamento" style="width: 30%">
                                             <h:outputText value="#{d.ordemPreferencia}" />
                                         </p:column>
 
