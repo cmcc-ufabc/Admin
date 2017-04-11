@@ -19,12 +19,14 @@
                         .ui-widget{font-size:90% !important;}
                     </style>
                     <p:panel style="height: 43px">
-                        <h:commandLink value="Ajuda" style="position: relative; right: 460px; color: #2E8B57"
-                                       action="/Tutorial/Tutorial" target="_blank" immediate="true"/>
+                        <h:panelGrid columns="3" style=" width: 100%">
+                            <h:commandLink value="Ajuda" style="color: #2E8B57"
+                                           action="/Tutorial/Tutorial" target="_blank" immediate="true"/>
 
-                        <h:outputLabel value="Resumo da Fase I - Alocação" style="color: #2E8B57; font-family: 'Play'; font-size: 24px"/>
-                        <h:commandLink value="Logout" style="position: relative; left: 460px; color: #2E8B57"
-                                       action="#{loginBean.doLogout()}" immediate="true"/>
+                            <h:outputLabel value="Resumo da Fase I - Alocação" style="color: #2E8B57; font-size: 24px"/>
+                            <h:commandLink value="Logout" style="color: #2E8B57"
+                                           action="#{loginBean.doLogout()}" immediate="true"/>
+                        </h:panelGrid>
                     </p:panel>
                 </p:layoutUnit> 
 
