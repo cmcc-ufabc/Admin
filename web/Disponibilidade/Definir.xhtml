@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Definir Disponibilidade</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+
+            <h:outputStylesheet library="css" name="style.css"/>
+
+            <h:form id="form">
+
+                <p:layout fullPage="true">
+
+                    <p:layoutUnit style="text-align:center" position="north" size="65"  resizable="true" closable="true" collapsible="true">
+                        <style type="text/css">
+                            .ui-widget{font-size:90% !important;}
+                        </style>
+                        <p:panel style="height: 43px">
+                            <h:panelGrid columns="3" style=" width: 100%">
+                                <h:commandLink value="Ajuda" style="color: #2E8B57"
+                                               action="/Tutorial/Tutorial" target="_blank" immediate="true"/>
+
+                                <h:outputLabel value="Gerenciar Fases do Sistema" style="color: #2E8B57; font-size: 24px"/>
+                                <h:commandLink value="Logout" style="color: #2E8B57"
+                                               action="#{loginBean.doLogout()}" immediate="true"/>
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:layoutUnit> 
+
+                    <p:layoutUnit position="west" size="170" header="Links Rápidos" 
+                                  style="text-align: center; font-size: smaller" resizable="true">  
+                        <p:separator/>
+                        <p:commandButton value="Gerenciar Fases" id="btnGerenciar" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareFase()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Resumo Afinidades" id="btnAfinidade" style="width: 160px; font-size: smaller"  
+                                         action="#{pessoaController.prepareAfinidades()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Resumo Fase I" id="btnFase1" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareFaseI()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Resumo Fase II" id="btnFase2" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareFaseII()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Cadastro" id="btnCadastro" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareCadastro()}" immediate="true"/>
+                        <p:separator/>
+
+                    </p:layoutUnit> 
+
+                    <p:layoutUnit position="center">
+
+                        <p:panel header="Selecionar Fases para Habilitação"
+                                 style="width: 500px; alignment-adjust: central; margin-top: 50px" styleClass="panelCenter">
+
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:outputLabel for="checkbox" value="Habilitar Afinidades" />
+                                <p:selectBooleanCheckbox id="checkbox" value="#{fase.afinidades}"/>
+                            </h:panelGrid>
+
+                            <p:separator/>
+
+                            <p:selectOneRadio value="#{fase.opt}" layout="custom" id="fases">
+                                <f:selectItem  itemLabel="Fase I - Planejamento Anual" itemValue="fase1"/>
+                                <f:selectItem  itemLabel="Fase II - Primeiro Quadrimestre" itemValue="fase21"/>
+                                <f:selectItem  itemLabel="Fase II - Segundo Quadrimestre" itemValue="fase22"/>
+                                <f:selectItem  itemLabel="Fase II - Terceiro Quadrimestre" itemValue="fase23"/>
+                            </p:selectOneRadio>
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:radioButton id="opt1" for="fases" itemIndex="0"/>
+                                <h:outputText value="Fase I - Planejamento Anual"/>
+                                <p:radioButton id="opt2" for="fases" itemIndex="1"/>
+                                <h:outputText value="Fase II - Primeiro Quadrimestre"/>
+                                <p:radioButton id="opt3" for="fases" itemIndex="2"/>
+                                <h:outputText value="Fase II - Segundo Quadrimestre"/>
+                                <p:radioButton id="opt4" for="fases" itemIndex="3"/>
+                                <h:outputText value="Fase II - Terceiro Quadrimestre"/>
+                            </h:panelGrid>
+                            <br/>
+                            <p:commandButton value="Submeter" action="#{fase.saveData()}"
+                                             style="width: 170px; font-size: small"/> 
+                            <p:spacer width="20"/>
+                            <p:commandButton  onclick="if (!confirm('Realmente deseja desabilitar todas as fases?'))
+                                        return false"
+                                              value="Desabilitar Fases" action="#{fase.desabilitarFases()}"
+                                              style="width: 170px; font-size: small"/>
+                        </p:panel>
+
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </h:body>
+
+    </f:view>
+</html>
