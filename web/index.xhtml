@@ -5,9 +5,10 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Início</title>
+        <title>Home</title>
     </h:head>
     <h:body>
+        <h:outputStylesheet library="css" name="style.css" />
 
         <f:view>
 
@@ -15,57 +16,58 @@
 
                 <p:layout fullPage="true">
 
-                    <p:dialog header="Sobre" draggable="false"  modal="true"   widgetVar="dlg2" height="220" resizable="false">
-                        <h:outputText escape="false" value="Sistema de Alocação Didática do CMCC" /> <br/>
-                        <h:outputText escape="false" value="Desenvolvido no CMCC-UFABC" /> <br/>
-                        <h:outputText escape="false" value="Coordenação: " /> <br/>
-                        <h:outputText escape="false" value="Prof. André G. R Balan" /> <br/>
-                        <h:outputText escape="false" value="Prof. Edson Pinheiro Pimentel" /> <br/>
-                        <h:outputText escape="false" value="Prof. Marcelo Bussotti Reyes" /> <br/><br/>
-                        <h:outputText escape="false" value="Desenvolvimento:" /> <br/>
-                        <h:outputText escape="false" value="André G. R Balan (andre.balan@ufabc.edu.br)" /> <br/>
-                        <h:outputText escape="false" value="Juliana Calió (juliana.calio@aluno.ufabc.edu.br)" /> <br/>
-                        <h:outputText escape="false" value="Vinicius Pavia (vcpavia@aluno.ufabc.edu.br)" /> <br/><br/>
-                        <h:outputText escape="false" value="Colaboradores:" /> <br/>
-                        <h:outputText escape="false" value="Elaine Konno Rocha" /> <br/>
+                    <p:layoutUnit style="text-align:center" position="north" size="65"  resizable="true" closable="true" collapsible="true">
+                        <style type="text/css">
+                            .ui-widget{font-size:90% !important;}
+                        </style>
+                        <p:panel style="height: 43px">
+                            <h:panelGrid columns="3" style=" width: 100%">
+                            <h:commandLink value="Ajuda" style="color: #2E8B57"
+                                           action="/Tutorial/Tutorial" target="_blank" immediate="true"/>
 
-                    </p:dialog>
-
-                    <p:layoutUnit style="text-align:center" position="north" size="100"  resizable="true" closable="true" collapsible="true" >  
-                        <h:commandLink   onclick="PF('dlg2').show();
-                                return false;" value="Sobre" 
-                                         style="position: relative; right: 650px ;color: #2E8B57; top: 10px"></h:commandLink>
-
-                        <h:commandLink value="Logout" style="position: relative; left: 650px; top: 10px; color: #2E8B57" 
-                                       action="#{loginBean.doLogout()}" immediate="true"/>
-                        <div style="color: #2E8B57 ;font-family: 'Play', serif;font-size: 24px; position: relative; top: 10px">Sistema de Alocação Didática do CMCC</div>
-
+                            <h:outputLabel value="Sistema Admin" style="color: #2E8B57; font-size: 24px"/>
+                            <h:commandLink value="Logout" style="color: #2E8B57"
+                                           action="#{loginBean.doLogout()}" immediate="true"/>
+                            </h:panelGrid>
+                        </p:panel>
                     </p:layoutUnit> 
 
+                    <p:layoutUnit position="west" size="170" header="Links Rápidos" style="text-align: center; font-size: small" resizable="true">  
+
+                        <p:separator/>
+                        <p:commandButton value="Gerenciar Fases" id="btnGerenciar" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareFase()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Resumo Afinidades" id="btnAfinidade" style="width: 160px; font-size: smaller"  
+                                         action="#{pessoaController.prepareAfinidades()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Resumo Fase I" id="btnFase1" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareFaseI()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Resumo Fase II" id="btnFase2" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareFaseII()}" immediate="true"/>
+                        <p:separator/>
+                        <p:commandButton value="Cadastro" id="btnCadastro" style="width: 160px; font-size: smaller"
+                                         action="#{pessoaController.prepareCadastro()}" immediate="true"/>
+                        <p:separator/>
+
+                    </p:layoutUnit>
 
                     <p:layoutUnit position="center">
 
-                        <p:panelMenu style="width:360px; height: 300px; text-align: justify; 
-                                     position: relative; left: 500px;top: 100px">
-                            <p:submenu label="Afinidades">
-                                <p:menuitem value="Definir afinidades" action="#{afinidadesController.prepareAfinidades()}" icon="ui-icon-pencil"/>
-                                <p:menuitem value="Resumo das afinidades" action="Afinidades/ResumoAfinidades" icon="ui-icon-clock"/>
-                            </p:submenu>
-                            <p:submenu  label="Disponibilidade">
-                                <p:menuitem value="Fase I" action="Disponibilidade/EscolhaQuad.xhtml" icon="ui-icon-pencil" />
-                                <p:menuitem value="Fase II" action="Disponibilidade/FaseII.xhtml" icon="ui-icon-pencil" />
-                                <p:menuitem value="Resumo Fase I" action="Disponibilidade/ResumoFaseI" icon="ui-icon-clock" />
-                                <p:menuitem value="Histórico de disponibilidade Fase I" action="Disponibilidade/LogsDisponibilidades1" icon="ui-icon-clock" />
-                                <p:menuitem value="Histórico de disponibilidade Fase II" action="Disponibilidade/LogsDisponibilidades2" icon="ui-icon-clock" />
+                        <p:growl id="growl" sticky="false" showDetail="true" life="3000" />
 
-                            </p:submenu>
-                            <p:submenu  label="Cadastros de Dados">
-                                <p:menuitem value="Fazer cadastros" icon="ui-icon-disk" action="Cadastro/cadastro"/>
-                            </p:submenu>
-
-                        </p:panelMenu>
-
-
+                        <p:panel header="Informações"
+                                 style="font-size: 20px; color: #2E8B57; width: 1000px; alignment-adjust: central; margin-top: 50px" styleClass="panelCenter">
+                            <h:outputText value="O Sistema Admin trabalha em conjunto com o Sistema de Alocação 
+                                          Didática. As alterações realizadas nesse sistema cabem aos coordenadores 
+                                          de curso e diretores do CMCC, docentes que não se encaixam nesses 
+                                          parâmetros não terão acesso a esse sistema. As funções de gerenciamento 
+                                          também divergem entre os tipos de usuário, não sendo permitido acesso 
+                                          total às funções do sistema."
+                                          style="font-size: 15px"/>
+                        </p:panel>
+                        
                     </p:layoutUnit>
 
                 </p:layout>
