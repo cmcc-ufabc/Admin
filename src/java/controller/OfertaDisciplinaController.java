@@ -22,13 +22,14 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import model.Disciplina;
+import model.Disp;
 import model.Disponibilidade;
 import model.Pessoa;
 import model.OfertaDisciplina;
+import util.DispDataModel;
 import util.DisponibilidadeDataModel;
 import util.OfertaDisciplinaDataModel;
 import util.OfertaDisciplinaLazyModel;
-
 
 @Named(value = "ofertaController")
 @SessionScoped
@@ -56,7 +57,6 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
     
     private OfertaDisciplinaDataModel dataModel;
     
-    
     //--------------------------------------Filtros----------------------------------------------------------
     
     private boolean filtrarAfinidades;
@@ -66,7 +66,6 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
     private String turno;
     
     private int quadrimestre;
-    
     
     //-------------------------------------Getters e Setters--------------------------------------------------------
 
@@ -85,16 +84,14 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
     public void setOferta(OfertaDisciplina oferta) {
         this.oferta = oferta;
     }
-    
-    
 
+    //Preenche o datamodel de oferta de disciplinas
     public OfertaDisciplinaDataModel getDataModel() {
         
         if(dataModel == null){
             List<OfertaDisciplina> ofertas = ofertaDisciplinaFacade.findAll();
             dataModel = new OfertaDisciplinaDataModel(ofertas);
         }
-        
         return dataModel;
     }
 
@@ -134,43 +131,45 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
         this.quadrimestre = quadrimestre;
     }
 
-    public DisponibilidadeDataModel getDispDataModel() {
+    /*public DisponibilidadeDataModel getDispDataModel() {
         return dispDataModel;
     }
 
     public void setDispDataModel(DisponibilidadeDataModel dispDataModel) {
+        this.dispDataModel = dispDataModel;
+    }*/
+    
+    public DispDataModel getDispDataModel() {
+        return dispDataModel;
+    }
+
+    public void setDispDataModel(DispDataModel dispDataModel) {
         this.dispDataModel = dispDataModel;
     }
  
 //------------------------------------------Fase I---------------------------------------------------------------
     
     //Prepara as páginas de escolha de Oferta de Disciplina de acordo com o quadrimestre-------------------------
-    
-    public String prepareQuad1(){
-        
+    public String prepareQuad1(){    
         dataModel = new OfertaDisciplinaDataModel(this.listarTodasQuad(1));
-        return "/Disponibilidade/FaseIQuad1";
-        
+        return "/Disponibilidade/FaseIQuad1"; 
     }
     
-    public String prepareQuad2(){
-        
+    public String prepareQuad2(){ 
         dataModel = new OfertaDisciplinaDataModel(this.listarTodasQuad(2));
-        return "/Disponibilidade/FaseIQuad2";
-        
+        return "/Disponibilidade/FaseIQuad2";  
     }
     
     public String prepareQuad3(){
-        
         dataModel = new OfertaDisciplinaDataModel(this.listarTodasQuad(3));
         return "/Disponibilidade/FaseIQuad3";
     }
-    
-    
+
     private OfertaDisciplinaLazyModel ofertas1LazyModel;
     private OfertaDisciplinaLazyModel ofertas2LazyModel;
     private OfertaDisciplinaLazyModel ofertas3LazyModel;
     
+    //Inicia os lazymodels
     @PostConstruct
     public void init() {
         ofertas1LazyModel = new OfertaDisciplinaLazyModel(this.listarTodasQuad(1));
@@ -179,11 +178,9 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
     }
 
     public OfertaDisciplinaLazyModel getOfertas1LazyModel() {
-        
         if(ofertas1LazyModel == null){
             ofertas1LazyModel = new OfertaDisciplinaLazyModel(this.listarTodasQuad(1));
         }
-        
         return ofertas1LazyModel;
     }
 
@@ -213,9 +210,7 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
         this.ofertas3LazyModel = ofertas3LazyModel;
     }
     
-    
 //---------------------------------------Resumo Fase I-----------------------------------------------------------    
-
     /**
      * Filtra as disponibilidades do docente de acordo com os parametros escolhidos
      */
@@ -233,55 +228,46 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
         turno = "";
         quadrimestre = 0;
         campus = "";
-
     }
 
     /**
      * Limpa os filtros e carrega todas as disponibilidades escolhidas
      */
     public void limparFiltroOfertas() {
-     
         dataModel = null;
     }
     
     //Disponibilidades de acordo com a Oferta de Disciplina escolhida, para mostrar no resumo
-    DisponibilidadeDataModel dispDataModel;
+    //DisponibilidadeDataModel dispDataModel;
+    DispDataModel dispDataModel;
     
+    //Preenche o datamodel com as disponibilidades
     public void preencherDisponibilidadesOferta() {
 
-        List<Disponibilidade> disponibilidades;
+        //List<Disponibilidade> disponibilidades;
+        List<Disp> disponibilidades;
         
         if (oferta != null) {
-            disponibilidades = new ArrayList<>(oferta.getDisponibilidades());
-
+            //disponibilidades = new ArrayList<>(oferta.getDisponibilidades());
+            disponibilidades = new ArrayList<>(oferta.getDispo());
         } else {
             disponibilidades = new ArrayList<>();
         }
- 
-        dispDataModel = new DisponibilidadeDataModel(disponibilidades);
-
+        //dispDataModel = new DisponibilidadeDataModel(disponibilidades);
+        dispDataModel = new DispDataModel(disponibilidades);
     }
 
-    
-    
-    //---------------------------LazyData Model--------------------------------------------------------------------
-    
-    
-
-    
     //---------------------------------------------------CRUD-------------------------------------------------------
     private List<OfertaDisciplina> listarTodas() {
         return ofertaDisciplinaFacade.findAll();
-
     }
     
     //Retorna as ofertas por quadrimestre
     private List<OfertaDisciplina> listarTodasQuad(int quad){
-        
         return ofertaDisciplinaFacade.findAllQuad(quad);
     }
 
-    
+    //Salva a oferta no banco de dados
     public void salvarNoBanco() {
 
         try {
@@ -291,16 +277,15 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
 //            recriarModelo();
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, "Ocorreu um erro de persistência");
-
         }
-
     }
 
+    //Busca por a oferta id
     public OfertaDisciplina buscar(Long id) {
-
         return ofertaDisciplinaFacade.find(id);
     }
 
+    //Edita a oferta
     public void editar() {
         try {
             ofertaDisciplinaFacade.edit(oferta);
@@ -308,7 +293,6 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
             oferta= null;
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, "Ocorreu um erro de persistência, não foi possível editar a oferta de disciplina: " + e.getMessage());
-
         }
     }
     
@@ -324,8 +308,8 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
 //        
 //    }
 
-
-        public void deleteAll(Long quad) {
+    //Deleta todas as ofertas
+    public void deleteAll(Long quad) {
 
         List<OfertaDisciplina> ofertas = listarTodasQuad((int)(long)quad);
         
@@ -342,16 +326,14 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
                     LoginBean.setUsuario(atual);
                 }
                 disponibilidadeFacade.remove(d);
-
             }
             ofertaDisciplinaFacade.remove(o);
         }
-        
-        ofertas1LazyModel = null;
-        
+        ofertas1LazyModel = null; 
     }
         
-        public void deleteAllQuad(Long quad) {
+    //Deleta todas as ofertas por quadrimestre
+    public void deleteAllQuad(Long quad) {
 
         Integer q = (int)(long) quad;    
         List<OfertaDisciplina> all = listarTodasQuad(q);
@@ -362,7 +344,6 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
             Pessoa atual;
             ofertaDisciplinaFacade.remove(t);
         }
-        
         if(q == 1){
            ofertas1LazyModel = null; 
         }
@@ -374,73 +355,66 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
                 ofertas3LazyModel = null;
             }
         }
-        
     }
-    
-    
-    
+
     public SelectItem[] getItemsAvaiableSelectOne() {
         return JsfUtil.getSelectItems(ofertaDisciplinaFacade.findAll(), true);
     }
 
     //Resumo Fase I--------------------------------------------------------------------------------------------------------------
 
+    //Quantidade de disponibilidades do docente
     public int qdtDocentesDisponibilidade(OfertaDisciplina of){
         
         of = ofertaDisciplinaFacade.inicializarColecaoDisponibilidades(of);
         
-        Set<Disponibilidade> disponibilidades = of.getDisponibilidades();
+        //Set<Disponibilidade> disponibilidades = of.getDisponibilidades();
+        Set<Disp> disponibilidades = of.getDispo();
         
         return disponibilidades.size();        
     }
     
     private DisponibilidadeDataModel docentesPorDisciplina;
 
+    //Quantidade de docentes por disciplina
     public DisponibilidadeDataModel getDocentesPorDisciplina() {
-        
         if(docentesPorDisciplina == null){
             docentesPorDisciplina = new DisponibilidadeDataModel();
         }
-        
         return docentesPorDisciplina;
     }
 
     public void setDocentesPorDisciplina(DisponibilidadeDataModel docentesPorDisciplina) {
         this.docentesPorDisciplina = docentesPorDisciplina;
     }
-    
-    
-    //Cadastro-------------------------------------------------------------------------------------------
 
-    
+    //Cadastro-------------------------------------------------------------------------------------------
     //Cadastrar oferta primeiro quadrimestre
     public void cadastrarOfertasQuad1(){
         
         String[] palavras;
         
         //Primeiro quadrimestre
-            try {
-          
-            try (BufferedReader lerArq = new BufferedReader(new InputStreamReader(new FileInputStream("C:\\Users\\Juliana\\Documents\\NetBeansProjects\\alocacao\\Arquivos Alocação\\Arquivos CSV\\quad1.csv"), "UTF-8"))) {
+        try {
+            try (BufferedReader lerArq = new BufferedReader(new InputStreamReader(new FileInputStream("/home/charles/alocacao/Arquivos Alocação/Arquivos CSV/Planejamento2017_q1.csv"), "UTF-8"))) {
                 String linha = lerArq.readLine(); //cabeçalho
                 
                 linha = lerArq.readLine();
-                
 
 //            linha = linha.replaceAll("\"", "");
                 while (linha != null) {
 
                     linha = linha.replaceAll("\"", "");
 
-                    palavras = linha.split("_", -1);
+                    palavras = linha.split(";", -1);
 
                     oferta = new OfertaDisciplina();
 
-                    oferta.setCurso(palavras[2]);
+                    oferta.setCurso(palavras[0]);//2
 
-                    String nome = palavras[4];
+                    String nome = palavras[2];//4
                     
-                    String codigo = palavras[3];
+                    String codigo = palavras[1];//3
                     
                     Disciplina d = disciplinaFacade.findByCodOrName(codigo, nome);
 
@@ -448,19 +422,18 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
 //                        Disciplina d = disciplinaFacade.findByName(nome).get(0);
                         oferta.setDisciplina(d);
                     }
-  
-                    oferta.setT(Integer.parseInt(palavras[5]));
-                    oferta.setP(Integer.parseInt(palavras[6]));
-                    oferta.setTurno(palavras[11]);
-                    oferta.setCampus(palavras[12]);
-                    if (!palavras[13].equals("")) {
-                        oferta.setNumTurmas(Integer.parseInt(palavras[13]));
+                    oferta.setT(Integer.parseInt(palavras[3]));//5
+                    oferta.setP(Integer.parseInt(palavras[4]));//6
+                    oferta.setTurno(palavras[6]);//11
+                    oferta.setCampus(palavras[7]);//12
+                    if (!palavras[8].equals("")) {
+                        oferta.setNumTurmas(Integer.parseInt(palavras[8]));//13
                     }
-
-                    if (!palavras[19].equals("")) {
-                        oferta.setPeriodicidade(palavras[19]);
+                    if (!palavras[9].equals("")) {
+                        oferta.setPeriodicidade(palavras[9]);//19
+                    } else{
+                        oferta.setPeriodicidade("semanal");
                     }
-
                     oferta.setQuadrimestre(1);
 
                     salvarNoBanco();
@@ -470,11 +443,9 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
                 }
             } //cabeçalho
                 ofertas1LazyModel = null;
-
             } catch (IOException e) {
                 System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
-            }
-        
+        } 
     }
     
     //Cadastrar oferta 2 quadrimestre
@@ -483,28 +454,26 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
        String[] palavras;
         
         //Primeiro quadrimestre
-            try {
-          
-            try (BufferedReader lerArq = new BufferedReader(new InputStreamReader(new FileInputStream("C:\\Users\\Juliana\\Documents\\NetBeansProjects\\alocacao\\Arquivos Alocação\\Arquivos CSV\\quad2.csv"), "UTF-8"))) {
+        try {
+            try (BufferedReader lerArq = new BufferedReader(new InputStreamReader(new FileInputStream("/home/charles/alocacao/Arquivos Alocação/Arquivos CSV/Planejamento2017_q2.csv"), "UTF-8"))) {
                 String linha = lerArq.readLine(); //cabeçalho
                 
-                linha = lerArq.readLine();
-                
+                linha = lerArq.readLine(); 
 
 //            linha = linha.replaceAll("\"", "");
                 while (linha != null) {
 
                     linha = linha.replaceAll("\"", "");
 
-                    palavras = linha.split("_", -1);
+                    palavras = linha.split(";", -1);
 
                     oferta = new OfertaDisciplina();
 
-                    oferta.setCurso(palavras[2]);
+                    oferta.setCurso(palavras[0]);//2
 
-                    String nome = palavras[4];
+                    String nome = palavras[2];//4
                     
-                    String codigo = palavras[3];
+                    String codigo = palavras[1];//3
                     
                     Disciplina d = disciplinaFacade.findByCodOrName(codigo, nome);
 
@@ -512,19 +481,18 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
 //                        Disciplina d = disciplinaFacade.findByName(nome).get(0);
                         oferta.setDisciplina(d);
                     }
-  
-                    oferta.setT(Integer.parseInt(palavras[5]));
-                    oferta.setP(Integer.parseInt(palavras[6]));
-                    oferta.setTurno(palavras[11]);
-                    oferta.setCampus(palavras[12]);
-                    if (!palavras[13].equals("")) {
-                        oferta.setNumTurmas(Integer.parseInt(palavras[13]));
+                    oferta.setT(Integer.parseInt(palavras[3]));//5
+                    oferta.setP(Integer.parseInt(palavras[4]));//6
+                    oferta.setTurno(palavras[6]);//11
+                    oferta.setCampus(palavras[7]);//12
+                    if (!palavras[8].equals("")) {
+                        oferta.setNumTurmas(Integer.parseInt(palavras[8]));//13
                     }
-
-                    if (!palavras[19].equals("")) {
-                        oferta.setPeriodicidade(palavras[19]);
+                    if (!palavras[9].equals("")) {
+                        oferta.setPeriodicidade(palavras[9]);//19
+                    } else{
+                        oferta.setPeriodicidade("semanal");
                     }
-
                     oferta.setQuadrimestre(2);
 
                     salvarNoBanco();
@@ -537,8 +505,7 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
 
             } catch (IOException e) {
                 System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
-            }
-        
+        }
     }
     
     //Cadastrar oferta 3 quadrimestre
@@ -546,28 +513,26 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
         String[] palavras;
         
         //Primeiro quadrimestre
-            try {
-          
-            try (BufferedReader lerArq = new BufferedReader(new InputStreamReader(new FileInputStream("C:\\Users\\Juliana\\Documents\\NetBeansProjects\\alocacao\\Arquivos Alocação\\Arquivos CSV\\quad3.csv"), "UTF-8"))) {
+        try {
+            try (BufferedReader lerArq = new BufferedReader(new InputStreamReader(new FileInputStream("/home/charles/alocacao/Arquivos Alocação/Arquivos CSV/Planejamento2017_q3.csv"), "UTF-8"))) {
                 String linha = lerArq.readLine(); //cabeçalho
                 
                 linha = lerArq.readLine();
-                
 
 //            linha = linha.replaceAll("\"", "");
                 while (linha != null) {
 
                     linha = linha.replaceAll("\"", "");
 
-                    palavras = linha.split("_", -1);
+                    palavras = linha.split(";", -1);
 
                     oferta = new OfertaDisciplina();
 
-                    oferta.setCurso(palavras[2]);
+                    oferta.setCurso(palavras[0]);//2
 
-                    String nome = palavras[4];
+                    String nome = palavras[2];//4
                     
-                    String codigo = palavras[3];
+                    String codigo = palavras[1];//3
                     
                     Disciplina d = disciplinaFacade.findByCodOrName(codigo, nome);
 
@@ -575,19 +540,18 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
 //                        Disciplina d = disciplinaFacade.findByName(nome).get(0);
                         oferta.setDisciplina(d);
                     }
-  
-                    oferta.setT(Integer.parseInt(palavras[5]));
-                    oferta.setP(Integer.parseInt(palavras[6]));
-                    oferta.setTurno(palavras[11]);
-                    oferta.setCampus(palavras[12]);
-                    if (!palavras[13].equals("")) {
-                        oferta.setNumTurmas(Integer.parseInt(palavras[13]));
+                    oferta.setT(Integer.parseInt(palavras[3]));//5
+                    oferta.setP(Integer.parseInt(palavras[4]));//6
+                    oferta.setTurno(palavras[6]);//11
+                    oferta.setCampus(palavras[7]);//12
+                    if (!palavras[8].equals("")) {
+                        oferta.setNumTurmas(Integer.parseInt(palavras[8]));//13
                     }
-
-                    if (!palavras[19].equals("")) {
-                        oferta.setPeriodicidade(palavras[19]);
+                    if (!palavras[9].equals("")) {
+                        oferta.setPeriodicidade(palavras[9]);//19
+                    } else{
+                        oferta.setPeriodicidade("semanal");
                     }
-
                     oferta.setQuadrimestre(3);
 
                     salvarNoBanco();
@@ -600,16 +564,11 @@ public class OfertaDisciplinaController extends Filtros implements Serializable 
 
             } catch (IOException e) {
                 System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
-            }
-        
+        } 
     }
-    
-    
 
     private OfertaDisciplina getTurma(Long key) {
-
         return buscar(key);
-        
     }
 
 //    @Override
