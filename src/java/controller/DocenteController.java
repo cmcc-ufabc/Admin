@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
@@ -251,7 +252,9 @@ public class DocenteController extends Filtros implements Serializable{
         
         List<Afinidade> afinidades;
         if (docente != null) {
-            afinidades = new ArrayList<>(docente.getAfinidades());
+            //afinidades = new ArrayList<>(docente.getAfinidades());
+            List<Afinidade> previa = new ArrayList<>(docente.getAfinidades());
+            afinidades = ordenar(previa);
         } else {
             afinidades = new ArrayList<>();
         }
@@ -272,10 +275,36 @@ public class DocenteController extends Filtros implements Serializable{
                     adicionadas.add(a);
                 }
             }
-            afinidadesDoDocente = new AfinidadeDataModel(adicionadas);
+            afinidadesDoDocente = new AfinidadeDataModel(ordenar(adicionadas));
+            //afinidadesDoDocente = new AfinidadeDataModel(adicionadas);
         } else {
-            afinidadesDoDocente = new AfinidadeDataModel(afinidades);
+            afinidadesDoDocente = new AfinidadeDataModel(ordenar(afinidades));
+            //afinidadesDoDocente = new AfinidadeDataModel(afinidades);
         }
+    }
+    
+    //Método para ordenar as afindades do docente
+    public List<Afinidade> ordenar(List<Afinidade> docente){
+        List<Afinidade> ordenada = new ArrayList<>();
+        int i,j, tamanho = docente.size();
+        Afinidade aux;
+        Afinidade vetor[] = new Afinidade[tamanho];
+        for(i=0;i<tamanho;i++){
+            vetor[i] = docente.get(i);
+        }
+        for(i=0;i<docente.size();i++){
+            for(j=i;j<tamanho;j++){
+                if(vetor[i].getDisciplina().getNome().compareTo(vetor[j].getDisciplina().getNome()) > 0){
+                    aux = vetor[i];
+                    vetor[i] = vetor[j];
+                    vetor[j] = aux;
+                }
+            }
+        }
+        for(i=0;i<tamanho;i++){
+            ordenada.add(vetor[i]);
+        }
+        return ordenada;
     }
     
     public AfinidadeDataModel getAfinidadesDoDocente() {
@@ -443,14 +472,41 @@ public class DocenteController extends Filtros implements Serializable{
                     byQuad.add(d);
                 }
             }
-            disponibilidadesDocente = new DispDataModel(byQuad);
+            //disponibilidadesDocente = new DispDataModel(byQuad);
+            disponibilidadesDocente = new DispDataModel(ordenarDisp(byQuad));
         } else { //caso o usuario não tenha clicado em nada, para não dar nullpointer
             all = new ArrayList<>();
             //disponibilidadesDocente = new DisponibilidadeDataModel(all);
-            disponibilidadesDocente = new DispDataModel(all);
+            //disponibilidadesDocente = new DispDataModel(all);
+            disponibilidadesDocente = new DispDataModel(ordenarDisp(all));
         }
     }
 
+    public List<Disp> ordenarDisp(List<Disp> docente){
+        List<Disp> ordenada = new ArrayList<>();
+        int i,j,primeira,segunda,tamanho = docente.size();
+        Disp aux;
+        Disp vetor[] = new Disp[tamanho];
+        for(i=0;i<tamanho;i++){
+            vetor[i] = docente.get(i);
+        }
+        for(i=0;i<tamanho;i++){
+            for(j=i;j<tamanho;j++){
+                primeira = Integer.parseInt(vetor[i].getOrdemPreferencia());
+                segunda = Integer.parseInt(vetor[j].getOrdemPreferencia());
+                if(primeira > segunda){
+                    aux = vetor[i];
+                    vetor[i] = vetor[j];
+                    vetor[j] = aux;
+                }
+            }
+        }
+        for(i=0;i<tamanho;i++){
+            ordenada.add(vetor[i]);
+        }
+        return ordenada;
+    }
+    
     /*public DisponibilidadeDataModel getDisponibilidadesDocente() {
         return disponibilidadesDocente;
     }
