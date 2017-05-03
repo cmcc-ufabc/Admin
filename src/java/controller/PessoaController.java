@@ -1,6 +1,6 @@
 package controller;
 
-
+import facade.NivelAcessoFacade;
 import facade.PessoaFacade;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,29 +18,32 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
+import model.NivelAcesso;
 import model.Pessoa;
 
 import util.PessoaLazyModel;
 
 @Named(value = "pessoaController")
 @SessionScoped
-public class PessoaController implements Serializable{
-    
+public class PessoaController implements Serializable {
+
     public PessoaController() {
-        pessoa = new Pessoa();
-        
+        pessoa = (Pessoa) LoginBean.getUsuario(); //Pega o usuário logado
     }
 
     //Guarda a  pessoa atual
     private Pessoa pessoa;
-    
+
     private Pessoa adm;
-    
+
     private Pessoa pessoaSalvar;
 
     @EJB
     private PessoaFacade pessoaFacade;
-   
+
+    @EJB
+    private NivelAcessoFacade nivelFacade;
+
     //-----------------------------------Getters e Setters---------------------------------------------
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
@@ -48,12 +51,11 @@ public class PessoaController implements Serializable{
 
     private Pessoa getPessoa(Long key) {
         return this.buscar(key);
-
     }
 
     public Pessoa getPessoa() {
-        if (pessoa== null) {
-            pessoa= new Pessoa();
+        if (pessoa == null) {
+            pessoa = new Pessoa();
         }
         return pessoa;
     }
@@ -65,23 +67,22 @@ public class PessoaController implements Serializable{
     public void setAdm(Pessoa adm) {
         this.adm = adm;
     }
-    
+
     public Pessoa getPessoaSalvar() {
-        
-        if(pessoaSalvar == null){
+
+        if (pessoaSalvar == null) {
             pessoaSalvar = new Pessoa();
         }
-        
         return pessoaSalvar;
     }
 
     public void setPessoaSalvar(Pessoa pessoaSalvar) {
         this.pessoaSalvar = pessoaSalvar;
     }
- 
+
     //---------------------------------------Páginas web------------------------------------------------------------
     public String prepareCreate(int i) {
-        pessoa= new Pessoa();
+        pessoa = new Pessoa();
         if (i == 1) {
             return "/view/pessoa/Create";
         } else {
@@ -90,170 +91,235 @@ public class PessoaController implements Serializable{
     }
 
     public String index() {
-        pessoa= null;
+        pessoa = null;
         pessoaDataModel = null;
         return "/index";
     }
 
     public String prepareEdit() {
-        pessoa= (Pessoa) pessoaDataModel.getRowData();
+        pessoa = (Pessoa) pessoaDataModel.getRowData();
         return "/Cadastro/editDocente";
     }
 
     public String prepareView() {
-        pessoa= (Pessoa) pessoaDataModel.getRowData();
+        pessoa = (Pessoa) pessoaDataModel.getRowData();
         //pessoa= pessoaFacade.find(pessoa.getID());
         //pessoaFacade.edit(pessoaFacade.find(pessoa.getID()));
         //pessoaFacade.edit(pessoa);
         return "View";
     }
-    
+
+    //Verifica o nível de acesso da pessoa para abrir as páginas de fase e cadastro
+    public String prepareFase() {
+        acesso = nivelFacade.achaAdm(pessoa.getID());
+        if (acesso.getNivel() == 1) {
+            return "/Disponibilidade/Definir";
+        } else if (acesso.getNivel() == 2) {
+            return "/index";
+        } else {
+            return "/index";
+        }
+    }
+
+    //Abre a página de afinidades
+    public String prepareAfinidades() {
+        acesso = nivelFacade.achaAdm(pessoa.getID());
+        if (acesso.getNivel() == 1 || acesso.getNivel() == 2) {
+            return "/Afinidades/ResumoAfinidades";
+        } else {
+            return "/index";
+        }
+    }
+
+    //Abre a página da fase 1
+    public String prepareFaseI() {
+        acesso = nivelFacade.achaAdm(pessoa.getID());
+        if (acesso.getNivel() == 1 || acesso.getNivel() == 2) {
+            return "/Disponibilidade/ResumoFaseI";
+        } else {
+            return "/index";
+        }
+    }
+
+    //Abre a página da fase 2
+    public String prepareFaseII() {
+        acesso = nivelFacade.achaAdm(pessoa.getID());
+        if (acesso.getNivel() == 1 || acesso.getNivel() == 2) {
+            return "/Disponibilidade/ResumoFaseII";
+        } else {
+            return "/index";
+        }
+    }
+
+    //Abre a página de cadastro
+    public String prepareCadastro() {
+        acesso = nivelFacade.achaAdm(pessoa.getID());
+        if (acesso.getNivel() == 1) {
+            return "/Cadastro/cadastro";
+        } else if (acesso.getNivel() == 2) {
+            return "/index";
+        } else {
+            return "/index";
+        }
+    }
+
     //---------------------------LazyData Model--------------------------------------------------------------------
-    
     private PessoaLazyModel pessoaDataModel;
-    
+
+    //Carrega o datamodel de pessoa
     public PessoaLazyModel getPessoaLazyModel() {
-        
-        if(pessoaDataModel == null){
+        if (pessoaDataModel == null) {
             pessoaDataModel = new PessoaLazyModel(this.listarTodas());
         }
-        
-        
         return this.pessoaDataModel;
     }
-    
+
     //Data model com os administradores do sistema
     private PessoaLazyModel admLazyModel;
 
     public PessoaLazyModel getAdmLazyModel() {
-        
-        if(admLazyModel == null){
+        if (admLazyModel == null) {
             admLazyModel = new PessoaLazyModel(pessoaFacade.listAdms());
         }
         return admLazyModel;
     }
 
+    //Inicia os datamodel e lazymodel
     @PostConstruct
     public void init() {
         pessoaDataModel = new PessoaLazyModel(this.listarTodas());
         admLazyModel = new PessoaLazyModel(pessoaFacade.listAdms());
     }
-    
+
     //---------------------------------------------------CRUD-------------------------------------------------------
+    //Busca todas as pessoas
     private List<Pessoa> listarTodas() {
         return pessoaFacade.findAll();
-
     }
 
-    
-    public void salvarNoBanco() {
+    private String nivel;
 
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
+    }
+
+    private NivelAcesso acesso;
+
+    //Salva tudo no banco
+    public void salvarNoBanco() {
         try {
             pessoaFacade.save(pessoa);
             JsfUtil.addSuccessMessage("Pessoa " + pessoa.getNome() + " criado com sucesso!");
-            pessoa= null;
+            pessoa = null;
             recriarModelo();
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, "Ocorreu um erro de persistência");
-
         }
-
     }
 
+    //Busca por id
     public Pessoa buscar(Long id) {
-
         return pessoaFacade.find(id);
     }
-    
-    public void salvar(){
+
+    //Salva pessoa
+    public void salvar() {
         try {
             pessoaFacade.save(pessoaSalvar);
             JsfUtil.addSuccessMessage("Docente " + pessoaSalvar.getNome() + " cadastrado com sucesso!");
             pessoaSalvar = null;
             pessoaDataModel = null;
-            
         } catch (Exception e) {
             JsfUtil.addErrorMessage("Não foi possível cadastrar o docente");
         }
     }
 
+    //Editar pessoa
     public void editar() {
         try {
             pessoaFacade.edit(pessoa);
             JsfUtil.addSuccessMessage("Docente editado com sucesso!");
-            pessoa= null;
+            pessoa = null;
             pessoaDataModel = null;
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, "Ocorreu um erro de persistência, não foi possível editar o docente: " + e.getMessage());
-
         }
     }
 
+    //Deleta pessoa
     public void delete() {
-        pessoa= (Pessoa) pessoaDataModel.getRowData();
+        pessoa = (Pessoa) pessoaDataModel.getRowData();
         try {
             pessoaFacade.remove(pessoa);
-            pessoa= null;
+            pessoa = null;
             JsfUtil.addSuccessMessage("Pessoa Deletado");
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, "Ocorreu um erro de persistência");
         }
-
         recriarModelo();
     }
-    
-    public void salvarAdm(){
-        
-        try{
+
+    //Salva adm
+    public void salvarAdm() {
+        try {
+            //Criar componente para escolher o nível de acesso
+            //Objeto nivelacesso com nivel e id da pessoa para salvar
+            acesso = new NivelAcesso();
+            acesso.setPessoa_id(adm.getID());
+            if (nivel.endsWith("1")) {
+                acesso.setNivel(1);
+            } else if (nivel.equals("2")) {
+                acesso.setNivel(2);
+            }
+            nivelFacade.save(acesso);
             adm.setAdm(true);
             pessoaFacade.edit(adm);
             adm = null;
             admLazyModel = null;
             JsfUtil.addSuccessMessage("Administrador Salvo!");
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             JsfUtil.addErrorMessage(e, "Ocorreu um erro de persistência");
         }
     }
-    
-    public void removerAdm(){
-        
+
+    //Remove adm
+    public void removerAdm() {
         pessoa = (Pessoa) admLazyModel.getRowData();
-        try{
+        try {
+            //Apagar o registro de nivelacesso
+            //acesso = new NivelAcesso();
+            acesso = nivelFacade.achaAdm(pessoa.getID());
+            nivelFacade.remove(acesso);
             pessoa.setAdm(false);
             pessoaFacade.edit(pessoa);
             pessoa = null;
             admLazyModel = null;
             JsfUtil.addSuccessMessage("Administrador removido");
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             JsfUtil.addErrorMessage(e, "Ocorreu um erro de persistência");
         }
-        
     }
-    
+
     public SelectItem[] getItemsAvaiableSelectOne() {
         return JsfUtil.getSelectItems(pessoaFacade.findAll(), true);
     }
 
     //--------------------------------------------------------------------------------------------------------------
-
     public void recriarModelo() {
-    
         pessoaDataModel = null;
-
     }
-    
-    
+
     //Cadastro-------------------------------------------------------------------------------------------
-    
-    
+    //Cadastra pessoas
     public void cadastrarPessoas() {
 
         String[] palavras;
 
         try {
-
             FileReader arq = new FileReader("/home/charles/NetBeansProjects/Arquivos CSV/docentes.csv");
 
             BufferedReader lerArq = new BufferedReader(arq);
@@ -264,17 +330,16 @@ public class PessoaController implements Serializable{
             // de repetição atingir o final do arquivo texto 
 
             linha = lerArq.readLine();
-            
-//            linha = linha.replaceAll("\"", "");
 
+//            linha = linha.replaceAll("\"", "");
             while (linha != null) {
-                
+
                 linha = linha.replaceAll("\"", "");
 
                 palavras = linha.split(",");
 
                 List<Pessoa> pessoas = pessoaFacade.findByName(trataNome(palavras[1]));
-                
+
                 if (pessoas.isEmpty()) {
 
                     Pessoa p = new Pessoa();
@@ -285,54 +350,43 @@ public class PessoaController implements Serializable{
                     p.setCentro(palavras[4]);
 
                     pessoaFacade.save(p);
-
                 }
-
                 linha = lerArq.readLine();
             }
-
             arq.close();
-
         } catch (IOException e) {
             System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
         }
 
         recriarModelo();
-        
+
         JsfUtil.addSuccessMessage("Cadastro de docentes realizado com sucesso", "");
-
     }
-    
-    
-    private String trataNome(String nome) { 
-        
-     String retorno = "";
-     String[] palavras = nome.split(" ");
-     
-     for(String p: palavras){
-         
-         if(p.equals("DAS") || p.equals("DOS") || p.length() <= 2){
-             p = p.toLowerCase();
-             retorno += p + " ";
-         }
-        
-         
-         else{
-             p = p.charAt(0) + p.substring(1, p.length()).toLowerCase();
-             retorno += p + " ";
-         }
-         
-     }
-        
-return retorno;
 
-} 
-    
+    //Trata nomes
+    private String trataNome(String nome) {
+
+        String retorno = "";
+        String[] palavras = nome.split(" ");
+
+        for (String p : palavras) {
+
+            if (p.equals("DAS") || p.equals("DOS") || p.length() <= 2) {
+                p = p.toLowerCase();
+                retorno += p + " ";
+            } else {
+                p = p.charAt(0) + p.substring(1, p.length()).toLowerCase();
+                retorno += p + " ";
+            }
+        }
+        return retorno;
+    }
+
     //AutoComplete----------------------------------------------------------------------------------------
     public List<Pessoa> completePessoa(String query) {
-        
-       query = query.toLowerCase();
-        
+
+        query = query.toLowerCase();
+
         List<Pessoa> allPessoas = this.listarTodas();
         List<Pessoa> filteredPessoas = new ArrayList<>();
 
@@ -344,35 +398,28 @@ return retorno;
         return filteredPessoas;
     }
 
-
     //Centro--------------------------------------------------------------------------------------------
-    public List<String> completeCentro(String query){
-        
+    public List<String> completeCentro(String query) {
+
         query = query.toLowerCase();
-        
+
         List<String> centros = new ArrayList<>();
         centros.add("CCNH");
         centros.add("CECS");
         centros.add("CMCC");
-        
+
         List<String> filteredCentros = new ArrayList<>();
 
-        for (String c : centros ) {
+        for (String c : centros) {
             if (c.toLowerCase().startsWith(query)) {
                 filteredCentros.add(c);
             }
         }
         return filteredCentros;
-        
     }
-    
+
     //----------------------------------------------------------------------------------------------------
-
-    
-    
     //---------------------------------------------------------------------------------------------------
-    
-
     @FacesConverter(forClass = Pessoa.class)
     public static class PessoaControllerConverter implements Converter {
 
@@ -404,7 +451,7 @@ return retorno;
                 return null;
             }
             if (object instanceof Pessoa) {
-                Pessoa d = (Pessoa) object;               
+                Pessoa d = (Pessoa) object;
                 return getStringKey(new BigDecimal(d.getID().toString()).setScale(0, BigDecimal.ROUND_HALF_UP).longValue());
 
             } else {
@@ -412,5 +459,4 @@ return retorno;
             }
         }
     }
-
 }
