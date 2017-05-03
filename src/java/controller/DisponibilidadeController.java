@@ -12,7 +12,9 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
+import javax.swing.event.ChangeEvent;
 import model.Afinidade;
 import model.Credito;
 import model.Disciplina;
@@ -920,8 +922,54 @@ public class DisponibilidadeController implements Serializable {
         this.quadrimestre = quadrimestre;
     }
 
+    public void iniciarFiltro(){
+        String c = campus;      
+        String t = turno;
+        if(c == null){
+            campus = "";
+        } else{
+            campus = c;
+        }
+        if(t == null){
+            turno = "";
+        } else{
+            turno = t;
+        }
+    }
     
-
+    public void onChangeCampus(ValueChangeEvent event) {
+        campus = event.getNewValue().toString();             
+        if(campus.equals("Ambos")){
+            campus = "";
+            filtrarTurmasQuad();
+        } else{
+            filtrarTurmasQuad();
+        }       
+    }
+    
+    public void onChangeTurno(ValueChangeEvent event) {
+        turno = event.getNewValue().toString();
+        if(turno.equals("Ambos")){
+            turno = "";
+            filtrarTurmasQuad();
+        } else{
+            filtrarTurmasQuad();
+        } 
+    }
+    
+    public void onChangeAfinidades(ValueChangeEvent event){
+        String valor = event.getNewValue().toString();
+        turno = "";
+        campus = "";
+        if(valor.equals("sim")){
+            filtrarAfinidades = true;
+            filtrarTurmasQuad();
+        } else{
+            filtrarAfinidades = false;
+            limparFiltroQuad();
+        }        
+    }
+    
     public void filtrarTurmasQuad(Long quad) {
         dataModel = null;
         discAfinidades = new ArrayList<>();
@@ -944,9 +992,9 @@ public class DisponibilidadeController implements Serializable {
         //dataModel = new OfertaDisciplinaDataModel(turmasFacade.filtrarAfinidTurnCampQuad(discAfinidades, turno, campus, q));
         dataModel = new OfertaDisciplinaLazyModel(turmasFacade.filtrarAfinidTurnCampQuad(discAfinidades, turno, campus, q));
         
-        filtrarAfinidades = false;
-        turno = "";
-        campus = "";
+        //filtrarAfinidades = false;
+        //turno = "";
+        //campus = "";
     }
     
     public void filtrarTurmasQuad() {
@@ -971,9 +1019,9 @@ public class DisponibilidadeController implements Serializable {
         //dataModel = new OfertaDisciplinaDataModel(turmasFacade.filtrarAfinidTurnCampQuad(discAfinidades, turno, campus, quadrimestre));
         dataModel = new OfertaDisciplinaLazyModel(turmasFacade.filtrarAfinidTurnCampQuad(discAfinidades, turno, campus, quadrimestre));
         
-        filtrarAfinidades = false;
-        turno = "";
-        campus = "";
+        //filtrarAfinidades = false;
+        //turno = "";
+        //campus = "";
     }
 
     public void limparFiltroQuad(Long quad) {
