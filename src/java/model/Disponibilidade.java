@@ -5,6 +5,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -39,11 +42,14 @@ public class Disponibilidade implements Serializable {
         public int hashCode() {
             return pessoaId.hashCode() + turmaId.hashCode();
         }
-
     }
 
     @EmbeddedId
     private Id id = new Id();
+    
+    /*@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long Id;*/
 
     private String ordemPreferencia;
   
@@ -100,6 +106,14 @@ public class Disponibilidade implements Serializable {
     public void setId(Id id) {
         this.id = id;
     }
+    
+    /*public Long getId(){
+        return Id;
+    }
+    
+    public void setId(Long Id){
+        this.Id = Id;
+    }*/
 
     public Pessoa getPessoa() {
         return pessoa;
@@ -117,8 +131,6 @@ public class Disponibilidade implements Serializable {
         this.ofertaDisciplina = ofertaDisciplina;
     }
 
-    
-
     public String getOrdemPreferencia() {
         return ordemPreferencia;
     }
@@ -134,5 +146,29 @@ public class Disponibilidade implements Serializable {
     public void setTp(String tp) {
         this.tp = tp;
     }
+    
+    /*@Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (Id != null ? Id.hashCode() : 0);
+        return hash;
+    }
 
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Disponibilidade)) {
+            return false;
+        }
+        Disponibilidade other = (Disponibilidade) object;
+        if ((this.Id == null && other.Id != null) || (this.Id != null && !this.Id.equals(other.Id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "model.Disponibilidade[ Id=" + Id + " ]";
+    }*/
 }
