@@ -12,7 +12,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
-
 @Stateless
 public class OfertaDisciplinaFacade extends AbstractFacade<OfertaDisciplina>{
     
@@ -22,12 +21,10 @@ public class OfertaDisciplinaFacade extends AbstractFacade<OfertaDisciplina>{
 
     @Override
     protected SessionFactory getSessionFactory() {
-
         return HibernateUtil.getSessionFactory();
-
     }
     
-    public OfertaDisciplina inicializarColecaoDisponibilidades(OfertaDisciplina oD){
+    /*public OfertaDisciplina inicializarColecaoDisponibilidades(OfertaDisciplina oD){
         
         Session session = getSessionFactory().openSession();
         session.refresh(oD);
@@ -36,8 +33,18 @@ public class OfertaDisciplinaFacade extends AbstractFacade<OfertaDisciplina>{
         session.close();
         return oD;
         
-    }
+    }*/
     
+    //Retorna a coleção de disponibilidades
+    public OfertaDisciplina inicializarColecaoDisponibilidades(OfertaDisciplina oD){
+        
+        Session session = getSessionFactory().openSession();
+        session.refresh(oD);
+        Hibernate.initialize(oD);
+        Hibernate.initialize(oD.getDispo());
+        session.close();
+        return oD;  
+    }
     
     /**
      * Filtra as Ofertas de disciplina por disciplina(s) com afinidades
@@ -51,7 +58,6 @@ public class OfertaDisciplinaFacade extends AbstractFacade<OfertaDisciplina>{
     public List<OfertaDisciplina> filtrarAfinidTurnCampQuad(List<Disciplina> disciplinas, String turno, String campus, int quadrimestre) {
 
         try {
-
             Session session = getSessionFactory().openSession();
 
             Criteria criteria = session.createCriteria(OfertaDisciplina.class);
@@ -59,30 +65,22 @@ public class OfertaDisciplinaFacade extends AbstractFacade<OfertaDisciplina>{
             if (!campus.equals("")) {
                 criteria.add(Restrictions.eq("campus", campus));
             }
-
             if (!turno.equals("")) {
                 criteria.add(Restrictions.eq("turno", turno));
             }
-
             if (quadrimestre != 0) {
                 criteria.add(Restrictions.eq("quadrimestre", quadrimestre));
             }
-
             if (!disciplinas.isEmpty()) { //Caso tenha sido escolhido para filtrar por disciplinas com afinidades
-
                 criteria.add(Restrictions.in("disciplina", disciplinas));
-
             }
-
             List resultado = criteria.list();
 
             session.close();
             return resultado;
-
         } catch (HibernateException e) {
             return null;
         }
-
     }
     
     /**
@@ -96,27 +94,20 @@ public class OfertaDisciplinaFacade extends AbstractFacade<OfertaDisciplina>{
      * @return Lista de ofertas de disciplinas filtradas
      */
     public List<OfertaDisciplina> filtrarEixoCursoTurnoCampusQuad(List<String> eixos, List<String> cursos, String turno, String campus, int quadrimestre) {
-
         try {
-
             Session session = getSessionFactory().openSession();
 
             Criteria criteria = session.createCriteria(OfertaDisciplina.class);
-
             if (!campus.equals("")) {//Se o usuario escolheu filtrar pelo campus
                 criteria.add(Restrictions.eq("campus", campus));
             }
-
             if (!turno.equals("")) {//Se o usuario escolheu filtrar pelo turno
                 criteria.add(Restrictions.eq("turno", turno));
             }
-
             if (quadrimestre != 0) {//Se o usuario escolheu filtrar pelo quadrimestre
                 criteria.add(Restrictions.eq("quadrimestre", quadrimestre));
             }
-
             if (eixos.size() > 0) {//Caso algum filtro de eixo tenha sido selecionado
-
                 criteria.createAlias("disciplina", "d");
 
                 if (cursos.size() > 0) {//Caso algum filtro de curso tenha sido selecionado
@@ -124,27 +115,20 @@ public class OfertaDisciplinaFacade extends AbstractFacade<OfertaDisciplina>{
                 } else {
                     criteria.add(Restrictions.in("d.eixo", eixos));
                 }
-
             } else {//Caso nenhum filtro de eixo tenha sido selecionado
-
                 if (cursos.size() > 0) {//Caso algum filtro de curso tenha sido selecionado
                     criteria.createAlias("disciplina", "d").add(Restrictions.or(Restrictions.in("d.curso", cursos)));
                 }
             }
-
             List resultado = criteria.list();
 
             session.close();
             return resultado;
-
         } catch (HibernateException e) {
             return null;
         }
     }
-    
-    
-    
-    
+
     /**
      * Lista as ofertas de disciplina por quadrimestre
      * @param quadrimestre int
@@ -163,6 +147,31 @@ public class OfertaDisciplinaFacade extends AbstractFacade<OfertaDisciplina>{
         return results;
     }
     
+    //Busca a oferta pelo id
+    public OfertaDisciplina ofertaPorId(Long idOferta){
+        Session session = getSessionFactory().openSession();
+        Criteria crit = session.createCriteria(OfertaDisciplina.class);
+        crit.add(Restrictions.eq("ID", idOferta));
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        
+        List<OfertaDisciplina> results = crit.list();
+        
+        session.close();
+        return results.get(0);
+    }
+    
+    //Busca disciplina pelo id
+    public List<OfertaDisciplina> buscarDiscplina(Long idDisciplina){
+        Session session = getSessionFactory().openSession();
+        Criteria crit = session.createCriteria(OfertaDisciplina.class);
+        crit.add(Restrictions.eq("disciplina", idDisciplina));
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        
+        List results = crit.list();
+        
+        session.close();
+        return results;
+    }    
     
     //Filtro por disciplina e/ou turno e/ou campus
 //    public List<OfertaDisciplina> filtrarDiscTurnoCampus(List<Disciplina> disciplinas, String turno, String campus) {
@@ -232,7 +241,6 @@ public class OfertaDisciplinaFacade extends AbstractFacade<OfertaDisciplina>{
 //        }
 //
 //    }
-
 }
 
 
