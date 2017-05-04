@@ -57,9 +57,5 @@ public class Horario implements Serializable {
 
     public void setPeriodicidade(String periodicidade) {
         this.periodicidade = periodicidade;
-    }
-    
-    
-    
-    
+    }  
 }
