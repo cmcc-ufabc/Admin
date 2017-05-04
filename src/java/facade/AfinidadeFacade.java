@@ -18,9 +18,9 @@ public class AfinidadeFacade extends AbstractFacade<Afinidade>{
     protected SessionFactory getSessionFactory() {
 
         return HibernateUtil.getSessionFactory();
-
     }
    
+    //Remove afinidade
     @Override
     public void remove(Afinidade a) {
         Session session = getSessionFactory().openSession();
@@ -31,8 +31,7 @@ public class AfinidadeFacade extends AbstractFacade<Afinidade>{
         } finally {
             session.close();
         }
-    }
- 
+    } 
 }
 
 
