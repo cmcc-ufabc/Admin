@@ -35,7 +35,6 @@ public class Afinidade implements Serializable{
                 Id that = (Id)o;
                 return this.pessoaId.equals(that.pessoaId) && this.disciplinaId.equals(that.disciplinaId);
             }
-            
             else{
                 return false;
             }
@@ -45,7 +44,6 @@ public class Afinidade implements Serializable{
         public int hashCode(){
             return pessoaId.hashCode() + disciplinaId.hashCode();
         }
-        
     }
     
     @EmbeddedId
@@ -120,5 +118,4 @@ public class Afinidade implements Serializable{
     public void setDisciplina(Disciplina disciplina) {
         this.disciplina = disciplina;
     }
-  
 }
