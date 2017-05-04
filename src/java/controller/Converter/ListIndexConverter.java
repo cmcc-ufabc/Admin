@@ -1,7 +1,4 @@
-
 package controller.Converter;
-
-
 
 import java.util.List;
 
@@ -59,5 +56,4 @@ public class ListIndexConverter implements Converter {
 	public void setList(List<?> list) {
 		this.list = list;
 	}
-
 }
