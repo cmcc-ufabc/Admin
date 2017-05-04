@@ -79,10 +79,6 @@ public class Docente extends Pessoa{
     public void setCreditoQuad(double creditoQuad) {
         this.creditoQuad = creditoQuad;
     }
-    
-    
-
-    
 
     @Override
     public int hashCode() {
@@ -110,21 +106,13 @@ public class Docente extends Pessoa{
     }
 
     public double getCreditoQuad(int quadrimestre) {
-       
-        
         creditoQuad = 0;
-        
-        
             for (Credito c : creditos) {
                 if (c.getQuadrimestre() == quadrimestre) {
                     creditoQuad = c.getQuantidade();
                     break;
-
                 }
-                
             }
-        
         return creditoQuad;
     }
- 
 }
