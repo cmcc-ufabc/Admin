@@ -5,7 +5,6 @@ import javax.faces.model.ListDataModel;
 import model.Turma;
 import org.primefaces.model.SelectableDataModel;
 
-
 public class TurmaDataModel extends ListDataModel implements SelectableDataModel<Turma> {
 
     public TurmaDataModel() {
@@ -18,15 +17,12 @@ public class TurmaDataModel extends ListDataModel implements SelectableDataModel
     @Override
     public Turma getRowData(String rowKey) {
         //In a real app, a more efficient way like a query by rowKey should be implemented to deal with huge data  
-
         List<Turma> turmas = (List<Turma>) getWrappedData();
-
         for (Turma turma : turmas) {
             if (turma.getID().equals(rowKey)) {
                 return turma;
             }
         }
-
         return null;
     }
 
@@ -34,5 +30,4 @@ public class TurmaDataModel extends ListDataModel implements SelectableDataModel
     public Object getRowKey(Turma turma) {
         return turma.getID();
     }
-
 }
