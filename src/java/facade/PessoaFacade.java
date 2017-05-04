@@ -12,68 +12,63 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 @Stateless
-public class PessoaFacade extends AbstractFacade<Pessoa>{
-    
+public class PessoaFacade extends AbstractFacade<Pessoa> {
+
     public PessoaFacade() {
         super(Pessoa.class);
     }
 
     @Override
     protected SessionFactory getSessionFactory() {
-
         return HibernateUtil.getSessionFactory();
-
     }
-    
+
     /**
      * Lozaliza uma pessoa de acordo com o nome
+     *
      * @param nome
-     * @return objeto Pessoa 
+     * @return objeto Pessoa
      */
-    public List<Pessoa> findByName(String nome){
+    public List<Pessoa> findByName(String nome) {
         Session session = getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(Pessoa.class);
         criteria.add(Restrictions.eq("nome", nome));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        
+
         List results = criteria.list();
         session.close();
-        
+
         return results;
-        
     }
-    
 
     /**
      * Localiza uma pessoa de acordo com o seu nome de usuário
+     *
      * @param username
      * @return Um objeto Pessoa
      */
     public Pessoa findByUsername(String username) {
+        try {
+            username = username + "%";
+            Session session = getSessionFactory().openSession();
+            Query query = session.createQuery("from Pessoa p where p.email like :email ");
+            query.setParameter("email", username);
+            List resultado = query.list();
 
-
-            try {
-                username = username + "%";
-                Session session = getSessionFactory().openSession();
-                Query query = session.createQuery("from Pessoa p where p.email like :email ");
-                query.setParameter("email", username);
-                List resultado = query.list();
-
-                if (resultado.size() == 1) {
-                    Pessoa userFound = (Pessoa) resultado.get(0);
-                    return userFound;
-                } else {
-                    return null;
-                }
-            } catch (HibernateException e) {
+            if (resultado.size() == 1) {
+                Pessoa userFound = (Pessoa) resultado.get(0);
+                return userFound;
+            } else {
                 return null;
             }
-
+        } catch (HibernateException e) {
+            return null;
+        }
     }
-    
 
     /**
      * Busca os usuarios administradores do sistema
+     *
      * @return Lista de usuarios administradores
      */
     public List<Pessoa> listAdms() {
@@ -86,15 +81,15 @@ public class PessoaFacade extends AbstractFacade<Pessoa>{
         session.close();
 
         return results;
-
     }
-    
+
     /**
      * Busca todas as pessoas que são docentes
+     *
      * @return Lista de docentes
      */
-    public List<Pessoa> listDocentes(){
-        
+    public List<Pessoa> listDocentes() {
+
         Session session = getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(Pessoa.class);
         criteria.add(Restrictions.eq("class", "Docente"));
@@ -104,8 +99,5 @@ public class PessoaFacade extends AbstractFacade<Pessoa>{
         session.close();
 
         return results;
-        
-        
     }
-
 }
