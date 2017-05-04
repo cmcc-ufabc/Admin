@@ -17,7 +17,6 @@ public class DisponibilidadeDataModel extends ListDataModel implements Selectabl
     @Override
     public Disponibilidade getRowData(String rowKey) {
         //In a real app, a more efficient way like a query by rowKey should be implemented to deal with huge data  
-
         List<Disponibilidade> disponibilidades = (List<Disponibilidade>) getWrappedData();
 
         for (Disponibilidade docente : disponibilidades) {
@@ -25,7 +24,6 @@ public class DisponibilidadeDataModel extends ListDataModel implements Selectabl
                 return docente;
             }
         }
-
         return null;
     }
 
@@ -33,5 +31,4 @@ public class DisponibilidadeDataModel extends ListDataModel implements Selectabl
     public Object getRowKey(Disponibilidade disponibilidade) {
         return disponibilidade.getId();
     }
-
 }
