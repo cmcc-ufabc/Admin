@@ -24,13 +24,12 @@ public class CreditoFacade extends AbstractFacade<Credito>{
     protected SessionFactory getSessionFactory() {
 
         return HibernateUtil.getSessionFactory();
-
     }
     
+    //Retorna quantos créditos o docente tem no quadrimestre
     public Credito creditoQuadrimestre(Docente docente, int quadrimestre){
             
         try {
-
             Session session = getSessionFactory().openSession();
             Criteria criteria = session.createCriteria(Credito.class);
             criteria.add(Restrictions.eq("docente", docente));
@@ -48,10 +47,7 @@ public class CreditoFacade extends AbstractFacade<Credito>{
         } catch (HibernateException e) {
             return null;
         }
-        
-    }
-
-    
+    }  
 }
 
 
