@@ -34,7 +34,6 @@ public class DisciplinaLazyModel extends LazyDataModel<Disciplina> implements Se
                 return disciplina;
             }
         }
-
         return null;
     }
 
@@ -50,7 +49,6 @@ public class DisciplinaLazyModel extends LazyDataModel<Disciplina> implements Se
         //filter
         for (Disciplina disciplina : datasource) {
             boolean match = true;
-
             if (filters != null) {
                 for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
                     try {
@@ -69,7 +67,6 @@ public class DisciplinaLazyModel extends LazyDataModel<Disciplina> implements Se
                     }
                 }
             }
-
             if (match) {
                 data.add(disciplina);
             }
