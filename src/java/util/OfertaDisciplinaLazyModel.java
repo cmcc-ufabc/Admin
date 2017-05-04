@@ -25,7 +25,6 @@ public class OfertaDisciplinaLazyModel extends LazyDataModel<OfertaDisciplina> i
                 return oferta;
             }
         }
-
         return null;
     }
 
@@ -41,7 +40,6 @@ public class OfertaDisciplinaLazyModel extends LazyDataModel<OfertaDisciplina> i
         //filter
         for (OfertaDisciplina oferta : datasource) {
             boolean match = true;
-
             if (filters != null) {
                 for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
                     try {
@@ -60,7 +58,6 @@ public class OfertaDisciplinaLazyModel extends LazyDataModel<OfertaDisciplina> i
                     }
                 }
             }
-
             if (match) {
                 data.add(oferta);
             }
