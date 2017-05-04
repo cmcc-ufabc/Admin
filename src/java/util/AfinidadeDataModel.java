@@ -17,15 +17,12 @@ public class AfinidadeDataModel extends ListDataModel implements SelectableDataM
     @Override
     public Afinidade getRowData(String rowKey) {
         //In a real app, a more efficient way like a query by rowKey should be implemented to deal with huge data  
-
         List<Afinidade> afinidades = (List<Afinidade>) getWrappedData();
-
         for (Afinidade afinidade : afinidades) {
             if (afinidade.getId().equals(rowKey)) {
                 return afinidade;
             }
         }
-
         return null;
     }
 
@@ -33,5 +30,4 @@ public class AfinidadeDataModel extends ListDataModel implements SelectableDataM
     public Object getRowKey(Afinidade afinidade) {
         return afinidade.getId();
     }
-
 }
