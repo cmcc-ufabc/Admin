@@ -301,6 +301,10 @@
                                         <h:outputText value="#{docenteController.docente.nome}" />
                                         <h:outputText value="Quantidade de Créditos Desejada: 
                                                       #{docenteController.creditosQuad(docenteController.docente)}"/>
+                                        <h:outputText value="Preferência de configuração de horários: 
+                                                      #{disponibilidadeController.preferenciaHorarios(docenteController.docente,docenteController.quad)}"/>
+                                        <h:outputText value="Observações feita pelo docente:"/>
+                                        <h:outputText value="#{disponibilidadeController.retornaObservacoes(docenteController.docente,docenteController.quad)}"/>
                                     </h:panelGrid>
                                     <br/>
 
