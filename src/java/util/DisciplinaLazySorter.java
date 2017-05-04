@@ -17,7 +17,6 @@ import org.primefaces.model.SortOrder;
  */
 public class DisciplinaLazySorter implements Comparator<Disciplina> {
 
-
     private String sortField;
 
     private SortOrder sortOrder;
