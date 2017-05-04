@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package util;
 
 import java.lang.reflect.Field;
@@ -17,7 +11,6 @@ import org.primefaces.model.SortOrder;
  * @author charles
  */
 public class PessoaLazySorter implements Comparator<Pessoa> {
-
 
     private String sortField;
 
