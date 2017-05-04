@@ -17,15 +17,12 @@ public class DocenteDataModel extends ListDataModel implements SelectableDataMod
     @Override
     public Docente getRowData(String rowKey) {
         //In a real app, a more efficient way like a query by rowKey should be implemented to deal with huge data  
-
         List<Docente> docentes = (List<Docente>) getWrappedData();
-
         for (Docente docente : docentes) {
             if (docente.getID().equals(rowKey)) {
                 return docente;
             }
         }
-
         return null;
     }
 
@@ -33,5 +30,4 @@ public class DocenteDataModel extends ListDataModel implements SelectableDataMod
     public Object getRowKey(Docente docente) {
         return docente.getID();
     }
-
 }
