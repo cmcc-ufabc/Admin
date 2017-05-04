@@ -25,7 +25,6 @@ public class AfinidadesLazyModel extends LazyDataModel<Afinidade> implements Sel
                 return afinidade;
             }
         }
-
         return null;
     }
 
@@ -41,7 +40,6 @@ public class AfinidadesLazyModel extends LazyDataModel<Afinidade> implements Sel
         //filter
         for (Afinidade afinidade : datasource) {
             boolean match = true;
-
             if (filters != null) {
                 for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
                     try {
@@ -60,7 +58,6 @@ public class AfinidadesLazyModel extends LazyDataModel<Afinidade> implements Sel
                     }
                 }
             }
-
             if (match) {
                 data.add(afinidade);
             }
