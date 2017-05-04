@@ -26,7 +26,6 @@ public class PessoaLazyModel extends LazyDataModel<Pessoa> implements Selectable
                 return p;
             }
         }
-
         return null;
     }
 
@@ -42,7 +41,6 @@ public class PessoaLazyModel extends LazyDataModel<Pessoa> implements Selectable
         //filter
         for (Pessoa p : datasource) {
             boolean match = true;
-
             if (filters != null) {
                 for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
                     try {
@@ -61,7 +59,6 @@ public class PessoaLazyModel extends LazyDataModel<Pessoa> implements Selectable
                     }
                 }
             }
-
             if (match) {
                 data.add(p);
             }
