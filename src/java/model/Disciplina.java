@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-
 @Entity
 public class Disciplina implements Serializable {
 
@@ -39,7 +38,6 @@ public class Disciplina implements Serializable {
     @OneToMany(mappedBy = "disciplina", cascade = CascadeType.ALL)
     private Set<OfertaDisciplina> ofertasDisciplinas;
 
-
     public Set<OfertaDisciplina> getOfertasDisciplinas() {
         return ofertasDisciplinas;
     }
@@ -51,8 +49,6 @@ public class Disciplina implements Serializable {
     Disciplina(Long disciplinaId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    
 
     public Set<Afinidade> getAfinidades() {
         return afinidades;
@@ -98,11 +94,8 @@ public class Disciplina implements Serializable {
         else{
             this.eixo = eixo;
         }
-        
-    
     }
-    
-    
+
     public String getCurso() {
         return curso;
     }
@@ -114,18 +107,14 @@ public class Disciplina implements Serializable {
         }
         else{
             this.curso = curso;
-        }
-        
-        
+        }  
     }
-    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (ID != null ? ID.hashCode() : 0);
         return hash;
-
     }
 
     @Override
@@ -134,20 +123,16 @@ public class Disciplina implements Serializable {
         if (!(object instanceof Disciplina)) {
             return false;
         }
-
         Disciplina other = (Disciplina) object;
         if ((this.ID == null && other.ID != null) || (this.ID != null && !(this.ID.equals(other.ID)))) {
             return false;
         }
-
         return true;
-
     }
 
     @Override
     public String toString() {
         return this.nome;
     }
-
 }
 
