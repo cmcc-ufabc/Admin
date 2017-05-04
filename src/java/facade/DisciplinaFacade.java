@@ -21,11 +21,10 @@ public class DisciplinaFacade extends AbstractFacade<Disciplina> {
 
     @Override
     protected SessionFactory getSessionFactory() {
-
         return HibernateUtil.getSessionFactory();
-
     }
     
+    //Retorna a coleção de afinidades
     public Disciplina inicializarColecaoAfinidades(Disciplina d) {
 
         Session session = getSessionFactory().openSession();
@@ -34,7 +33,6 @@ public class DisciplinaFacade extends AbstractFacade<Disciplina> {
         Hibernate.initialize(d.getAfinidades());
         session.close();
         return d;
-
     }
 
     /**
@@ -51,7 +49,6 @@ public class DisciplinaFacade extends AbstractFacade<Disciplina> {
         session.close();
 
         return results;
-
     }
 
     
@@ -73,11 +70,9 @@ public class DisciplinaFacade extends AbstractFacade<Disciplina> {
         if(!results.isEmpty()){
             return results.get(0);
         }
-        
         else{
             return null;
         }
-        
     }
 
     /**
@@ -93,11 +88,8 @@ public class DisciplinaFacade extends AbstractFacade<Disciplina> {
         try {
 
             Session session = getSessionFactory().openSession();
-
             if (!eixos.isEmpty()) {
-
                 for (String eixo : eixos) {
-                    
                     Criteria criteria = session.createCriteria(Disciplina.class);
                     criteria.add(Restrictions.eq("eixo", eixo));
                     List<Disciplina> resultado = criteria.list();
@@ -107,11 +99,8 @@ public class DisciplinaFacade extends AbstractFacade<Disciplina> {
 //                    List resultado = query.list();              
                 }
             }
-
             if (!cursos.isEmpty()) {
-
                 for (String curso : cursos) {
-                    
                     Criteria criteria = session.createCriteria(Disciplina.class);
                     criteria.add(Restrictions.eq("curso", curso));
                     List<Disciplina> resultado = criteria.list();
@@ -121,16 +110,11 @@ public class DisciplinaFacade extends AbstractFacade<Disciplina> {
 //                    List resultado = query.list();
 //                    disciplinas.addAll(resultado);
                 }
-
             }
-
             return disciplinas;
-
         } catch (HibernateException e) {
             return null;
         }
-
     }
-
 }
 
