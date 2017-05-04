@@ -55,36 +55,28 @@ public class Credito implements Serializable {
     public void setDocente(Docente docente) {
         this.docente = docente;
     }
-    
-    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (ID != null ? ID.hashCode() : 0);
         return hash;
-
     }
 
     @Override
     public boolean equals(Object object) {
-
         if (!(object instanceof Credito)) {
             return false;
         }
-
         Credito other = (Credito) object;
         if ((this.ID == null && other.ID != null) || (this.ID != null && !(this.ID.equals(other.ID)))) {
             return false;
         }
-
         return true;
-
     }
 
     @Override
     public String toString() {
         return "Créditos: " + this.quantidade;
     }
-    
 }
