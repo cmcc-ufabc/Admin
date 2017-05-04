@@ -17,15 +17,12 @@ public class OfertaDisciplinaDataModel extends ListDataModel implements Selectab
     @Override
     public OfertaDisciplina getRowData(String rowKey) {
         //In a real app, a more efficient way like a query by rowKey should be implemented to deal with huge data  
-
         List<OfertaDisciplina> ofertas = (List<OfertaDisciplina>) getWrappedData();
-
         for (OfertaDisciplina oferta : ofertas) {
             if (oferta.getID().equals(rowKey)) {
                 return oferta;
             }
         }
-
         return null;
     }
 
@@ -33,5 +30,4 @@ public class OfertaDisciplinaDataModel extends ListDataModel implements Selectab
     public Object getRowKey(OfertaDisciplina oferta) {
         return oferta.getID();
     }
-
 }
