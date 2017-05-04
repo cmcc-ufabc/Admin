@@ -46,6 +46,9 @@ public class Pessoa implements Serializable, Comparable<Pessoa> {
     
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "pessoa", cascade = CascadeType.ALL)
     private Set<Disponibilidade> disponibilidades;  
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private Set<Disp> dispo;  
 
     public Long getID() {
         return ID;
@@ -94,7 +97,7 @@ public class Pessoa implements Serializable, Comparable<Pessoa> {
     public void setAdm(boolean adm) {
         this.adm = adm;
     }
-    
+
     public Set<Afinidade> getAfinidades() {
         return afinidades;
     }
@@ -110,29 +113,32 @@ public class Pessoa implements Serializable, Comparable<Pessoa> {
     public void setDisponibilidades(Set<Disponibilidade> disponibilidades) {
         this.disponibilidades = disponibilidades;
     }
+    
+    public Set<Disp> getDispo() {
+        return dispo;
+    }
+
+    public void setDisp(Set<Disp> dispo) {
+        this.dispo = dispo;
+    }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (ID != null ? ID.hashCode() : 0);
         return hash;
-
     }
 
     @Override
     public boolean equals(Object object) {
-
         if (!(object instanceof Pessoa)) {
             return false;
         }
-
         Pessoa other = (Pessoa) object;
         if ((this.ID == null && other.ID != null) || (this.ID != null && !(this.ID.equals(other.ID)))) {
             return false;
         }
-
         return true;
-
     }
 
     @Override
@@ -142,8 +148,6 @@ public class Pessoa implements Serializable, Comparable<Pessoa> {
     
     @Override
     public int compareTo(Pessoa o) {
-    
         return this.getNome().compareTo(o.getNome());
     }
-
 }
