@@ -19,13 +19,11 @@ public class DisciplinaDataModel extends ListDataModel implements SelectableData
         //In a real app, a more efficient way like a query by rowKey should be implemented to deal with huge data  
 
         List<Disciplina> disciplinas = (List<Disciplina>) getWrappedData();
-
         for (Disciplina disciplina : disciplinas) {
             if (disciplina.getID().equals(rowKey)) {
                 return disciplina;
             }
         }
-
         return null;
     }
 
@@ -33,5 +31,4 @@ public class DisciplinaDataModel extends ListDataModel implements SelectableData
     public Object getRowKey(Disciplina disciplina) {
         return disciplina.getID();
     }
-
 }
