@@ -24,9 +24,7 @@ public class TurmaFacade extends AbstractFacade<Turma> {
 
     @Override
     protected SessionFactory getSessionFactory() {
-
         return HibernateUtil.getSessionFactory();
-
     }
 
     //Método para buscar turmas pelo id od docente
@@ -68,4 +66,15 @@ public class TurmaFacade extends AbstractFacade<Turma> {
     }
 
     //Método para criar lista de horários com base no ID da turma para visualizar no cadastro
+    public Turma achaTurma(Long idTurma){
+        Session session = getSessionFactory().openSession();
+        Criteria criteria = session.createCriteria(Turma.class);
+        criteria.add(Restrictions.eq("ID", idTurma));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+        List<Turma> results = criteria.list();
+        session.close();
+
+        return results.get(0);
+    }
 }
