@@ -13,21 +13,20 @@ import org.primefaces.event.SelectEvent;
 
 @Named(value = "creditoController")
 @SessionScoped
-public class CreditoController extends Filtros implements Serializable{
-    
+public class CreditoController extends Filtros implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     public CreditoController() {
-        
+
     }
-    
+
     @EJB
     private CreditoFacade creditoFacade;
-    
-    
+
     //----------------------Fase I Disponibilidade----------------------------------------
     private Docente docente;
-    
+
     private double quantidade;
 
     public double getQuantidade() {
@@ -37,36 +36,32 @@ public class CreditoController extends Filtros implements Serializable{
     public void setQuantidade(double quantidade) {
         this.quantidade = quantidade;
     }
-    
-    
-    
-        public double creditosQuad(Long quad){
-        
+
+    //Busca a quantidade de créditos do quadrimestre
+    public double creditosQuad(Long quad) {
+
         docente = (Docente) LoginBean.getUsuario();
         Integer quadrimestre = (int) (long) quad;
         double credito = 0;
         List<Credito> all = docente.getCreditos();
-        for(Credito c : all){
-            if(c.getQuadrimestre() == quadrimestre){
+        for (Credito c : all) {
+            if (c.getQuadrimestre() == quadrimestre) {
                 credito = c.getQuantidade();
             }
         }
-        
         return credito;
-        
     }
-        
+
 //        public void adicionaCredito(OfertaDisciplina oferta){
 //            
 //            quantidade += oferta.getT();
 //            
 //        }
-
-        
-       public void adicionaCredito(SelectEvent event) {
+    //Adiciiona créditos para o docente
+    public void adicionaCredito(SelectEvent event) {
         OfertaDisciplina oferta = (OfertaDisciplina) event.getObject();
 
-        switch(oferta.getFuncao()){
+        switch (oferta.getFuncao()) {
             case "Teoria":
                 quantidade += oferta.getT();
                 break;
@@ -76,13 +71,11 @@ public class CreditoController extends Filtros implements Serializable{
             default:
                 quantidade += oferta.getT() + oferta.getP();
         }
-
     }
-       
-       public void diminuiCredito(SelectEvent event){
-           OfertaDisciplina oferta = (OfertaDisciplina) event.getObject();
-           
-           quantidade -= oferta.getT();
-       }
-}
 
+    //Remove créditos salvos
+    public void diminuiCredito(SelectEvent event) {
+        OfertaDisciplina oferta = (OfertaDisciplina) event.getObject();
+        quantidade -= oferta.getT();
+    }
+}
