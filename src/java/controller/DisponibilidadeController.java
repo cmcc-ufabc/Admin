@@ -4,6 +4,7 @@ import facade.CreditoFacade;
 import facade.DispFacade;
 import facade.DisponibilidadeFacade;
 import facade.OfertaDisciplinaFacade;
+import facade.PreferenciasFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import model.Disponibilidade;
 import model.Docente;
 import model.Pessoa;
 import model.OfertaDisciplina;
+import model.Preferencias;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -38,9 +40,7 @@ public class DisponibilidadeController implements Serializable {
 
     //Construtor (pega o usuario Logado)
     public DisponibilidadeController() {
-
         docente = (Docente) LoginBean.getUsuario();
-
     }
  
     private Disponibilidade disponibilidade;
@@ -72,8 +72,6 @@ public class DisponibilidadeController implements Serializable {
     public void setCreditosPlanejados2(double creditosPlanejados2) {
         this.creditosPlanejados2 = creditosPlanejados2;
     }
-    
-    
 
     public void setCreditosPlanejados(double creditosPlanejados) {
         this.creditosPlanejados = creditosPlanejados;
@@ -454,10 +452,7 @@ public class DisponibilidadeController implements Serializable {
     public void setDispdataModel2(DisponibilidadeDataModel dispdataModel2) {
         this.dispdataModel2 = dispdataModel2;
     }
-    
-    
-    
-    
+
     public void salvarDisponibilidade() {
 
         for (OfertaDisciplina oferta : ofertasEtapa1) {
@@ -471,12 +466,10 @@ public class DisponibilidadeController implements Serializable {
             }            
             disponibilidade = new Disponibilidade("",funcao ,docente, oferta);
             disponibilidadeFacade.save(disponibilidade);
-
         }
 
         dispdataModel = null;
-        dispdataModel2 = null;
-        
+        dispdataModel2 = null;        
     }
     
     //Novo Disponibilidade-------------------------------------------------------
@@ -494,9 +487,7 @@ public class DisponibilidadeController implements Serializable {
             List<Disp> d = dispFacade.findByDocente(docente);
 
             dDataModel = new DispDataModel(d);
-
         }
-
         return dDataModel;
     }
 
@@ -507,9 +498,7 @@ public class DisponibilidadeController implements Serializable {
             List<Disp> d = dispFacade.findByDocenteQuad(docente, quad);
 
             dDataModel = new DispDataModel(d);
-
         }
-
         return dDataModel;
     }
 
@@ -525,9 +514,7 @@ public class DisponibilidadeController implements Serializable {
             List<Disp> d = dispFacade.findByDocenteQuad(docente, quadrimestre);
 
             dModel2 = new DispDataModel(d);
-
         }
-
         return dModel2;
     }
 
@@ -685,7 +672,6 @@ public class DisponibilidadeController implements Serializable {
         }*/
         
         for (Disp d : docente.getDispo()) {
-
             if (d.getOfertaDisciplina().getQuadrimestre() == (int) (long) quad) {
                 tamanho++;
             }
@@ -698,9 +684,7 @@ public class DisponibilidadeController implements Serializable {
         for (int i = 1; i <= tamanho; i++) {
             ordem.add(String.valueOf(i));
         }
-
         return ordem;
-        
     }
     
     public void setOrdem(List<String> ordem) {
@@ -724,7 +708,6 @@ public class DisponibilidadeController implements Serializable {
                 tp.add("Teoria & Prática");
             }
             return tp;
-        
     }
     
     //Usado para o docente definir se ele quer dar teoria, prática ou ambos 
@@ -743,7 +726,6 @@ public class DisponibilidadeController implements Serializable {
                 tp.add("Teoria & Prática");
             }
             return tp;
-        
     }*/
     
     public List<String> getTipoDisp(Disp d){
@@ -761,7 +743,31 @@ public class DisponibilidadeController implements Serializable {
                 tp.add("Teoria & Prática");
             }
             return tp;
-        
+    }
+    
+    @EJB
+    private PreferenciasFacade preferenciaFacade;
+    
+    //Retorna qual a preferência de configuração de horários o docente marcou na fase I
+    public String preferenciaHorarios(Docente docente, int quad){
+        String horarios = "";
+        int opcoesHorarios = preferenciaFacade.retornaPreferencia(docente.getID(), quad);
+        if(opcoesHorarios == 1){
+            horarios = "Um dia e vários turnos";
+        } else if(opcoesHorarios == 2){
+            horarios = "Vários dias e um turno";
+        } else if(opcoesHorarios == 3){
+            horarios = "Vários dias e vários turnos";
+        } else{
+            horarios = "Não definido";
+        }
+        return horarios;
+    }
+    
+    public String retornaObservacoes(Docente docente, int quad){
+        String observacoes = "";
+        observacoes = preferenciaFacade.docenteObservacoes(docente.getID(), quad);
+        return observacoes;
     }
  
     public void sucessoFase1(){
@@ -770,7 +776,6 @@ public class DisponibilidadeController implements Serializable {
         //JsfUtil.addSuccessMessage("Disponibilidades em turmas salvas com sucesso!");
         context.addMessage(null, new FacesMessage("Successful", "Alterações salvas com Sucesso!") );
     }
-
 
 //-----------------------------------------Paginas web-----------------------------------------------
     
