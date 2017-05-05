@@ -34,9 +34,7 @@ public class AfinidadeController extends Filtros implements Serializable{
     
     @EJB
     private DisciplinaFacade disciplinaFacade;
-    
-    
-    
+
 //-------------------------------------------Definir afinidade-------------------------------------------------------------------------
     //Guarda a afinidade atual
     private Afinidade afinidade;
@@ -55,8 +53,7 @@ public class AfinidadeController extends Filtros implements Serializable{
     
     //Disciplinas disponiveis------------------------------------------------------
     private List<Disciplina> disponiveis;
-    
-    
+
     /**
      * Vê quais disciplinas o docente já escolheu,
      * para exibir só as que ele ainda não selecionou(não estão salvas na afinidade, 
@@ -90,9 +87,7 @@ public class AfinidadeController extends Filtros implements Serializable{
             for (Disciplina e : escolhidas) {
                 disponiveis.remove(e);
             }
-
         }
-
         return disponiveis;
     }
     
@@ -109,18 +104,15 @@ public class AfinidadeController extends Filtros implements Serializable{
         
         for (Disciplina t : escolhidas) {
             disponiveis.remove(t);
-        }
-        
+        }       
         super.setFiltrosSelecEixos(null);
         super.setFiltrosSelecCursos(null);
-
     }
       
     /**
      * Carrega todas as disciplinas disponiveis novamente
      */
     public void limparFiltro(){
-    
         disponiveis = null;        
     }
     
@@ -159,16 +151,12 @@ public class AfinidadeController extends Filtros implements Serializable{
                 a.setEstado("Removida");
                 afinidadeFacade.edit(a);
             }
-            
-        }
-        
+        }        
         disponiveis = null;
         paraRemover = null;
-        paraAdicionar = null;
-                 
+        paraAdicionar = null;           
     }
-    
-    
+
     //Getters e setters
     public Afinidade getAfinidade() {
         return afinidade;
@@ -217,20 +205,15 @@ public class AfinidadeController extends Filtros implements Serializable{
 //---------------------------------------------------CRUD-------------------------------------------------------
     private List<Afinidade> listarTodas() {
         return afinidadeFacade.findAll();
-
     }
     
     public Afinidade buscar(Long id) {
-
         return afinidadeFacade.find(id);
     }
-    
-    
 
     public SelectItem[] getItemsAvaiableSelectOne() {
         return JsfUtil.getSelectItems(listarTodas(), true);
     }
-
 
 //----------------------------------------Páginas web------------------------------------------------------------
     public String prepareCreate(int i) {
@@ -289,6 +272,5 @@ public class AfinidadeController extends Filtros implements Serializable{
             }
         }
     }
-
 }
 
